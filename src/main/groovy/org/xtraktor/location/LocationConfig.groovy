@@ -12,4 +12,6 @@ class LocationConfig {
 
     long minLatitude
     long maxLatitude
+
+    long minTimestamp
 }
