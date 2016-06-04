@@ -1,4 +1,4 @@
-package org.xtraktor.mine;
+package org.xtraktor.mining;
 
 import org.xtraktor.DataMiner;
 import org.xtraktor.ShortPoint;

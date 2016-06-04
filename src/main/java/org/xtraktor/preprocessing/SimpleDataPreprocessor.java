@@ -1,37 +1,38 @@
-package org.xtraktor.preprocess;
+package org.xtraktor.preprocessing;
 
 import org.xtraktor.DataPreprocessor;
 import org.xtraktor.LongPoint;
 import org.xtraktor.ShortPoint;
 import org.xtraktor.location.LocationConfig;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-public class SimpleDataPreprocessor implements DataPreprocessor {
+public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor {
 
     final LocationConfig config;
-    final PointsInterpolation interpolation;
 
-    public SimpleDataPreprocessor(LocationConfig config,
-                                  PointsInterpolation interpolation) {
+    public SimpleDataPreprocessor(LocationConfig config) {
         this.config = config;
-        this.interpolation = interpolation;
     }
 
     @Override
     public List<ShortPoint> normalize(List<LongPoint> input) {
 
-        pair(sort(input))
+        return pair(sort(input))
                 .parallelStream()
-                .flatMap(point -> interpolation.runInterpolation(point).stream())
+                .flatMap(point -> point.interpolate(config).stream())
                 .collect(Collectors.toList());
     }
 
-    private List<LongPoint> pair(List<LongPoint> input) {
-        AtomicReference<LongPoint> prev = new AtomicReference<>();
+    @Override
+    public List<LongPoint> pair(List<LongPoint> input) {
+        final AtomicReference<LongPoint> prev = new AtomicReference<>();
         input.forEach(p -> {
             if (prev.get() != null) {
                 prev.get().setNextPoint(p);
@@ -42,7 +43,8 @@ public class SimpleDataPreprocessor implements DataPreprocessor {
         return input;
     }
 
-    private List<LongPoint> sort(List<LongPoint> input) {
+    @Override
+    public List<LongPoint> sort(List<LongPoint> input) {
         Collections.sort(input, (p1, p2) -> Long.compare(p1.getTimestamp(), p2.getTimestamp()));
         return input;
     }

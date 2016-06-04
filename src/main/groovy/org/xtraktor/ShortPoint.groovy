@@ -4,8 +4,13 @@ import groovy.transform.Canonical
 
 @Canonical
 class ShortPoint {
-    int row
-    int col
-    int time
+    long longitude
+    long latitude
+
+    long longitudeIndex
+    long latitudeIndex
+
+    long timestamp
+
     long userId
 }

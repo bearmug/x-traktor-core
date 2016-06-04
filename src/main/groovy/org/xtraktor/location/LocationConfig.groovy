@@ -4,14 +4,15 @@ import groovy.transform.Immutable
 
 @Immutable
 class LocationConfig {
-    int rowNumber
-    int colNumber
 
-    long minLongitude
-    long maxLongitude
+    long longitudeMin
+    long longitudeDelta
+    long longitudeSteps
 
-    long minLatitude
-    long maxLatitude
+    long latitudeMin
+    long latitudeDelta
+    long latitudeSteps
 
-    long minTimestamp
+    long timeMin
+    long timeDelta
 }
