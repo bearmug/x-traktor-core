@@ -40,6 +40,8 @@ class RawPointTest extends Specification {
         where:
         lon     | lat     | time | nextLon | nextLat | nextTime | targetLon | targetLat | targetTime | hash           | userId
         50.3656 | 45.2891 | 500  | 50.3658 | 45.2893 | 1500     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
+        50.3657 | 45.2892 | 1000 | 50.3658 | 45.2893 | 1500     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
+        50.3656 | 45.2891 | 500  | 50.3657 | 45.2892 | 1000     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
     }
 
     def "validation failed for point below time horizon"() {
