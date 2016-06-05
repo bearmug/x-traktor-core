@@ -9,11 +9,7 @@ class HashPoint {
     String geoHashFull
 
     double longitude
-
     double latitude
-
-
     long timestamp
-
     long userId
 }

@@ -9,7 +9,7 @@ class RawPointTest extends Specification {
     @Unroll
     def "interpolation for single point executed: #mode"() {
 
-        given: //1-second precision config with 1.0lon/lat tolerance
+        given: //1-second precision config with 1.0 lon/lat tolerance
         LocationConfig config = new LocationConfig(
                 timeMin: 0,
                 tolerance: 1.0,
