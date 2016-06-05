@@ -6,7 +6,12 @@ import groovy.transform.Canonical
 class HashPoint {
 
     //hash with fully available precision
-    BitSet geoHashFull
+    String geoHashFull
+
+    double longitude
+
+    double latitude
+
 
     long timestamp
 

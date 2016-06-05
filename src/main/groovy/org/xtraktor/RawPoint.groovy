@@ -1,14 +1,17 @@
 package org.xtraktor
 
 import com.google.common.math.DoubleMath
+import com.javadocmd.simplelatlng.Geohasher
+import com.javadocmd.simplelatlng.LatLng
 import groovy.transform.Canonical
 import org.xtraktor.location.LocationConfig
 
+import java.math.RoundingMode
 import java.util.stream.Collectors
 
 @Canonical
 class RawPoint {
-    double longitute
+    double longitude
     double latitude
     long timestamp
     long userId
@@ -29,34 +32,36 @@ class RawPoint {
     boolean isValid(LocationConfig config) {
         timestamp >= config.timeMin &&
                 nextPoint != null &&
-                DoubleMath.fuzzyEquals(longitute, nextPoint.longitute, config.tolerance) &&
+                DoubleMath.fuzzyEquals(longitude, nextPoint.longitude, config.tolerance) &&
                 DoubleMath.fuzzyEquals(latitude, nextPoint.latitude, config.tolerance)
 
     }
 
     List<HashPoint> interpolate(LocationConfig config) {
-        Long minIndex = (timestamp - config.timeMin) / config.timeDelta
-        Long maxIndex = (nextPoint.timestamp - config.timeMin) / config.timeDelta
+
+        long minIndex = DoubleMath.roundToLong(
+                (timestamp - config.timeMin) / config.timeDelta,
+                RoundingMode.UP)
+
+        long maxIndex = DoubleMath.roundToLong(
+                (nextPoint.timestamp - config.timeMin) / config.timeDelta,
+                RoundingMode.DOWN)
 
         return [minIndex..maxIndex]
                 .parallelStream()
                 .map { index ->
-            def tim = config.timeMin + index * config.timeDelta
-            def pointRatio = (tim - timestamp) / (nextPoint.timestamp - timestamp)
+            long pointTime = config.timeMin + index * config.timeDelta
+            double pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
 
-            def lon = longitute + (nextPoint.longitute - longitute) * pointRatio
-            def lat = latitude + (nextPoint.latitude - latitude) * pointRatio
-
-            def lonIndex = (lon - config.longitudeMin) / config.longitudeDelta
-            def latIndex = (lat - config.latitudeMin) / config.latitudeDelta
+            def pointLon = longitude + (nextPoint.longitude - longitude) * pointRatio
+            def pointLat = latitude + (nextPoint.latitude - latitude) * pointRatio
 
             new HashPoint(
-                    longitude: lon,
-                    latitude: lat,
-                    longitudeIndex: lonIndex,
-                    latitudeIndex: latIndex,
-                    timestamp: tim,
-                    userId: userId
+                    longitude: pointLon,
+                    latitude: pointLat,
+                    timestamp: pointTime,
+                    userId: userId,
+                    geoHashFull: Geohasher.hash(new LatLng(pointLat, pointLon))
             )
         }
         .collect(Collectors.toList())
