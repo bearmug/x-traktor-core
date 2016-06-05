@@ -2,10 +2,12 @@ package org.xtraktor
 
 import org.xtraktor.location.LocationConfig
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class RawPointTest extends Specification {
 
-    def "interpolation for single point executed"() {
+    @Unroll
+    def "interpolation for single point executed: #mode"() {
 
         given: //1-second precision config with 1.0lon/lat tolerance
         LocationConfig config = new LocationConfig(
@@ -30,18 +32,18 @@ class RawPointTest extends Specification {
         then:
         res.size() == 1
         res.each {
-            assert it.longitude == targetLon
-            assert it.latitude == targetLat
+            assert it.longitude == targetLon as Double
+            assert it.latitude == targetLat as Double
             assert it.timestamp == targetTime
             assert it.geoHashFull == hash
             assert it.userId == userId
         }
 
         where:
-        lon     | lat     | time | nextLon | nextLat | nextTime | targetLon | targetLat | targetTime | hash           | userId
-        50.3656 | 45.2891 | 500  | 50.3658 | 45.2893 | 1500     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
-        50.3657 | 45.2892 | 1000 | 50.3658 | 45.2893 | 1500     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
-        50.3656 | 45.2891 | 500  | 50.3657 | 45.2892 | 1000     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
+        mode                     | lon     | lat     | time | nextLon | nextLat | nextTime | targetLon | targetLat | targetTime | hash           | userId
+        'inside range'           | 50.3656 | 45.2891 | 500  | 50.3658 | 45.2893 | 1500     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
+        'point from left limit'  | 50.3657 | 45.2892 | 1000 | 50.3658 | 45.2893 | 1500     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
+        'point from right limit' | 50.3656 | 45.2891 | 500  | 50.3657 | 45.2892 | 1000     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
     }
 
     def "validation failed for point below time horizon"() {

@@ -1,14 +1,12 @@
 package org.xtraktor
 
 import com.google.common.math.DoubleMath
-import com.google.common.math.LongMath
 import com.javadocmd.simplelatlng.Geohasher
 import com.javadocmd.simplelatlng.LatLng
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic
 import org.xtraktor.location.LocationConfig
 
-import java.math.MathContext
 import java.math.RoundingMode
 import java.util.stream.Collectors
 
@@ -61,9 +59,9 @@ class RawPoint {
             def pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
 
             double pointLon = ((longitude + (nextPoint.longitude - longitude) * pointRatio) as Double)
-                    .round(6)
+                    .round(LocationConfig.PRECISION)
             double pointLat = ((latitude + (nextPoint.latitude - latitude) * pointRatio) as Double)
-                    .round(6)
+                    .round(LocationConfig.PRECISION)
 
             new HashPoint(
                     longitude: pointLon,
