@@ -46,6 +46,41 @@ class RawPointTest extends Specification {
         'point from right limit' | 50.3656 | 45.2891 | 500  | 50.3657 | 45.2892 | 1000     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
     }
 
+    @Unroll
+    def "interpolation for two points executed: #mode"() {
+
+        given: //1-second precision config with 1.0lon/lat tolerance
+        LocationConfig config = new LocationConfig(
+                timeMin: 0,
+                tolerance: 1.0,
+                timeDelta: 1000)
+        RawPoint nextPoint = new RawPoint(
+                longitude: nextLon,
+                latitude: nextLat,
+                timestamp: nextTime)
+        RawPoint point = new RawPoint(
+                longitude: lon,
+                latitude: lat,
+                timestamp: time,
+                nextPoint: nextPoint)
+
+        when:
+        List<HashPoint> res = point.interpolate config
+
+        then:
+        res.size() == 2
+        res.each {
+            assert it.geoHashFull.indexOf(hash) == 0
+        }
+
+        where:
+        mode                     | lon     | lat     | time | nextLon | nextLat | nextTime | hash
+        'inside range'           | 50.3656 | 45.2891 | 500  | 50.3658 | 45.2893 | 2500     | 'v05cdhe'
+        'point from left limit'  | 50.3647 | 45.2892 | 1000 | 50.3652 | 45.2893 | 2500     | 'v05cdhd'
+        'point from right limit' | 50.3656 | 45.2891 | 500  | 50.3654 | 45.2889 | 2000     | 'v05cdh'
+        'point from both limits' | 50.3653 | 45.2892 | 1000 | 50.3655 | 45.2894 | 2000     | 'v05cdh'
+    }
+
     def "validation failed for point below time horizon"() {
         given:
         LocationConfig config = new LocationConfig(timeMin: millis)
