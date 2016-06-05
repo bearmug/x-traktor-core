@@ -1,13 +1,10 @@
 package org.xtraktor.preprocessing;
 
 import org.xtraktor.DataPreprocessor;
-import org.xtraktor.LongPoint;
-import org.xtraktor.ShortPoint;
+import org.xtraktor.RawPoint;
+import org.xtraktor.HashPoint;
 import org.xtraktor.location.LocationConfig;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,17 +19,18 @@ public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor
     }
 
     @Override
-    public List<ShortPoint> normalize(List<LongPoint> input) {
+    public List<HashPoint> normalize(List<RawPoint> input) {
 
         return pair(sort(input))
                 .parallelStream()
+                .filter(point -> point.isValid(config))
                 .flatMap(point -> point.interpolate(config).stream())
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<LongPoint> pair(List<LongPoint> input) {
-        final AtomicReference<LongPoint> prev = new AtomicReference<>();
+    public List<RawPoint> pair(List<RawPoint> input) {
+        final AtomicReference<RawPoint> prev = new AtomicReference<>();
         input.forEach(p -> {
             if (prev.get() != null) {
                 prev.get().setNextPoint(p);
@@ -44,7 +42,7 @@ public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor
     }
 
     @Override
-    public List<LongPoint> sort(List<LongPoint> input) {
+    public List<RawPoint> sort(List<RawPoint> input) {
         Collections.sort(input, (p1, p2) -> Long.compare(p1.getTimestamp(), p2.getTimestamp()));
         return input;
     }

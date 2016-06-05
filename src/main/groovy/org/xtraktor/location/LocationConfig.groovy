@@ -5,14 +5,8 @@ import groovy.transform.Immutable
 @Immutable
 class LocationConfig {
 
-    long longitudeMin
-    long longitudeDelta
-    long longitudeSteps
-
-    long latitudeMin
-    long latitudeDelta
-    long latitudeSteps
-
+    double tolerance = 1.0
+    int hashPrecision
     long timeMin
     long timeDelta
 }

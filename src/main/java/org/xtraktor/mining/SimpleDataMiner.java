@@ -1,7 +1,7 @@
 package org.xtraktor.mining;
 
 import org.xtraktor.DataMiner;
-import org.xtraktor.ShortPoint;
+import org.xtraktor.HashPoint;
 import org.xtraktor.location.LocationConfig;
 
 import java.util.List;
@@ -15,12 +15,12 @@ public class SimpleDataMiner implements DataMiner {
     }
 
     @Override
-    public List<ShortPoint> matchForPoint(ShortPoint input) {
+    public List<HashPoint> matchForPoint(HashPoint input) {
         return null;
     }
 
     @Override
-    public List<ShortPoint> matchForRoute(List<ShortPoint> input) {
+    public List<HashPoint> matchForRoute(List<HashPoint> input) {
         return null;
     }
 }

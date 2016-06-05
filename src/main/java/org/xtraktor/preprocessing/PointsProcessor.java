@@ -1,10 +1,10 @@
 package org.xtraktor.preprocessing;
 
-import org.xtraktor.LongPoint;
+import org.xtraktor.RawPoint;
 
 import java.util.List;
 
 interface PointsProcessor {
-    List<LongPoint> pair(List<LongPoint> input);
-    List<LongPoint> sort(List<LongPoint> input);
+    List<RawPoint> pair(List<RawPoint> input);
+    List<RawPoint> sort(List<RawPoint> input);
 }

@@ -3,12 +3,10 @@ package org.xtraktor
 import groovy.transform.Canonical
 
 @Canonical
-class ShortPoint {
-    long longitude
-    long latitude
+class HashPoint {
 
-    long longitudeIndex
-    long latitudeIndex
+    //hash with fully available precision
+    BitSet geoHashFull
 
     long timestamp
 

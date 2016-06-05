@@ -7,5 +7,5 @@ import java.util.List;
  * output with predefined discretion time/space discretion.
  */
 public interface DataPreprocessor {
-    List<ShortPoint> normalize(List<LongPoint> input);
+    List<HashPoint> normalize(List<RawPoint> input);
 }
