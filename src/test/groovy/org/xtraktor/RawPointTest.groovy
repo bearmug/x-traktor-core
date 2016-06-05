@@ -30,16 +30,16 @@ class RawPointTest extends Specification {
         then:
         res.size() == 1
         res.each {
-            it.longitude == targetLon
-            it.latitude == targetLat
-            it.timestamp == targetTime
-            it.geoHashFull == hash
-            it.userId == userId
+            assert it.longitude == targetLon
+            assert it.latitude == targetLat
+            assert it.timestamp == targetTime
+            assert it.geoHashFull == hash
+            assert it.userId == userId
         }
 
         where:
-        lon     | lat     | time | nextLon | nextLat | nextTime | targetLon | targetLat | targetTime | hash   | userId
-        50.3656 | 45.2891 | 500  | 50.3658 | 45.2893 | 500      | 50.3657   | 45.2892   | 1000       | 'asfr' | 777
+        lon     | lat     | time | nextLon | nextLat | nextTime | targetLon | targetLat | targetTime | hash           | userId
+        50.3656 | 45.2891 | 500  | 50.3658 | 45.2893 | 1500     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
     }
 
     def "validation failed for point below time horizon"() {
@@ -71,47 +71,79 @@ class RawPointTest extends Specification {
         millis = System.currentTimeMillis()
     }
 
-    def "validation failed nextPoint lon/lat out of tolerance limits"() {
+    def "validation failed nextPoint with invalid timestamp"() {
 
         given:
         LocationConfig config = new LocationConfig(
-                timeMin: millis,
+                timeMin: 0,
                 tolerance: tolerance)
 
         when:
         RawPoint point = new RawPoint(
-                timestamp: millis + 1,
+                timestamp: pointTime,
                 longitude: lon,
                 latitude: lat,
-                nextPoint: new RawPoint(longitude: nextLon, latitude: nextLat))
+                nextPoint: new RawPoint(
+                        longitude: nextLon,
+                        latitude: nextLat,
+                        timestamp: nextPointTime))
 
         then:
         !point.isValid(config)
 
         where:
-        lon  | lat    | nextLon | nextLat | millis                     | tolerance
-        55.2 | 64.345 | 52.3    | 64.346  | System.currentTimeMillis() | 1.0
-        55.2 | 64.345 | 55.243  | 65.346  | System.currentTimeMillis() | 1.0
+        lon  | lat    | pointTime | nextLon | nextLat | nextPointTime | tolerance
+        55.2 | 64.345 | 1001      | 55.3    | 64.346  | 1001          | 1.0
+        55.2 | 64.345 | 1001      | 55.243  | 64.346  | 999           | 1.0
     }
 
-    def "validation passed for correct RawPoint"() {
+    def "validation failed nextPoint lon/lat out of tolerance limits"() {
+
+        given:
         LocationConfig config = new LocationConfig(
-                timeMin: millis,
+                timeMin: 0,
                 tolerance: tolerance)
 
         when:
         RawPoint point = new RawPoint(
-                timestamp: millis + 1,
+                timestamp: pointTime,
                 longitude: lon,
                 latitude: lat,
-                nextPoint: new RawPoint(longitude: nextLon, latitude: nextLat))
+                nextPoint: new RawPoint(
+                        longitude: nextLon,
+                        latitude: nextLat,
+                        timestamp: pointTime + 1))
+
+        then:
+        !point.isValid(config)
+
+        where:
+        lon  | lat    | pointTime | nextLon | nextLat | tolerance
+        55.2 | 64.345 | 1000      | 52.3    | 64.346  | 1.0
+        55.2 | 64.345 | 1000      | 55.243  | 65.346  | 1.0
+    }
+
+    def "validation passed for correct RawPoint"() {
+        LocationConfig config = new LocationConfig(
+                timeMin: 0,
+                tolerance: tolerance)
+
+        when:
+        RawPoint point = new RawPoint(
+                timestamp: pointTime,
+                longitude: lon,
+                latitude: lat,
+                nextPoint: new RawPoint(
+                        longitude: nextLon,
+                        latitude: nextLat,
+                        timestamp: pointTime + 1))
 
         then:
         point.isValid(config)
 
         where:
-        lon  | lat    | nextLon | nextLat | millis                     | tolerance
-        55.2 | 64.345 | 52.3    | 64.346  | System.currentTimeMillis() | 3.0
-        55.2 | 64.345 | 55.243  | 65.346  | System.currentTimeMillis() | 1.1
+        lon  | lat    | pointTime | nextLon | nextLat | tolerance
+        55.2 | 64.345 | 1000      | 52.3    | 64.346  | 3.0
+        55.2 | 64.345 | 1000      | 55.243  | 65.346  | 1.1
     }
 }

@@ -1,15 +1,19 @@
 package org.xtraktor
 
 import com.google.common.math.DoubleMath
+import com.google.common.math.LongMath
 import com.javadocmd.simplelatlng.Geohasher
 import com.javadocmd.simplelatlng.LatLng
 import groovy.transform.Canonical
+import groovy.transform.CompileStatic
 import org.xtraktor.location.LocationConfig
 
+import java.math.MathContext
 import java.math.RoundingMode
 import java.util.stream.Collectors
 
 @Canonical
+@CompileStatic
 class RawPoint {
     double longitude
     double latitude
@@ -32,6 +36,7 @@ class RawPoint {
     boolean isValid(LocationConfig config) {
         timestamp >= config.timeMin &&
                 nextPoint != null &&
+                nextPoint.timestamp > timestamp &&
                 DoubleMath.fuzzyEquals(longitude, nextPoint.longitude, config.tolerance) &&
                 DoubleMath.fuzzyEquals(latitude, nextPoint.latitude, config.tolerance)
 
@@ -43,18 +48,22 @@ class RawPoint {
                 (timestamp - config.timeMin) / config.timeDelta,
                 RoundingMode.UP)
 
-        long maxIndex = DoubleMath.roundToLong(
-                (nextPoint.timestamp - config.timeMin) / config.timeDelta,
-                RoundingMode.DOWN)
+        long maxIndex = Math.max(
+                DoubleMath.roundToLong(
+                        (nextPoint.timestamp - config.timeMin) / config.timeDelta,
+                        RoundingMode.DOWN),
+                minIndex)
 
-        return [minIndex..maxIndex]
+        return (minIndex..maxIndex)
                 .parallelStream()
-                .map { index ->
-            long pointTime = config.timeMin + index * config.timeDelta
-            double pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
+                .map { it ->
+            long pointTime = config.timeMin + config.timeDelta * (it as Long)
+            def pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
 
-            def pointLon = longitude + (nextPoint.longitude - longitude) * pointRatio
-            def pointLat = latitude + (nextPoint.latitude - latitude) * pointRatio
+            double pointLon = ((longitude + (nextPoint.longitude - longitude) * pointRatio) as Double)
+                    .round(6)
+            double pointLat = ((latitude + (nextPoint.latitude - latitude) * pointRatio) as Double)
+                    .round(6)
 
             new HashPoint(
                     longitude: pointLon,
