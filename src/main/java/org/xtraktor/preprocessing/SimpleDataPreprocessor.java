@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor {
 
@@ -19,13 +20,12 @@ public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor
     }
 
     @Override
-    public List<HashPoint> normalize(List<RawPoint> input) {
+    public Stream<HashPoint> normalize(List<RawPoint> input) {
 
         return pair(sort(input))
                 .parallelStream()
                 .filter(point -> point.isValid(config))
-                .flatMap(point -> point.interpolate(config))
-                .collect(Collectors.toList());
+                .flatMap(point -> point.interpolate(config));
     }
 
     @Override
