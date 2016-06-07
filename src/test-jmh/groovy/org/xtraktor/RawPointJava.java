@@ -7,9 +7,8 @@ import org.xtraktor.location.LocationConfig;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 public class RawPointJava {
     private final double longitude;
@@ -38,7 +37,7 @@ public class RawPointJava {
 
     }
 
-    public List<HashPoint> interpolate(LocationConfig config) {
+    public Stream<HashPoint> interpolate(LocationConfig config) {
 
         long minIndex = DoubleMath.roundToLong(
                 (timestamp - config.getTimeMin()) / config.getTimeDelta(),
@@ -72,8 +71,7 @@ public class RawPointJava {
                             pointLat,
                             pointTime,
                             userId);
-                })
-                .collect(Collectors.toList());
+                });
     }
 }
 

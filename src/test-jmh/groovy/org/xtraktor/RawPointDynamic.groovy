@@ -6,8 +6,8 @@ import com.javadocmd.simplelatlng.LatLng
 import org.xtraktor.location.LocationConfig
 
 import java.math.RoundingMode
-import java.util.stream.Collectors
 import java.util.stream.LongStream
+import java.util.stream.Stream
 
 class RawPointDynamic {
     double longitude
@@ -26,7 +26,7 @@ class RawPointDynamic {
 
     }
 
-    List<HashPoint> interpolate(LocationConfig config) {
+    Stream<HashPoint> interpolate(LocationConfig config) {
 
         long minIndex = DoubleMath.roundToLong(
                 (timestamp - config.timeMin) / config.timeDelta,
@@ -57,6 +57,5 @@ class RawPointDynamic {
                     userId
             )
         })
-                .collect(Collectors.toList())
     }
 }

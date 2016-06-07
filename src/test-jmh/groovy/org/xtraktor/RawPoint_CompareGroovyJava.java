@@ -8,18 +8,19 @@ import org.xtraktor.location.LocationConfig;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * Compare groovy dynamic / groovy static / javacode performance
  * Sample output
  * <p>
- * Benchmark                                           (latitude)  (longitude)  (timeDelta)  (timestamp)  (userId)  Mode  Cnt       Score   Error  Units
- * RawPoint_CompareGroovyJava.interpolateGroovy         48.339571    54.145679       200000         1000       777  avgt    2  686801.156          ns/op
- * RawPoint_CompareGroovyJava.interpolateGroovyStatic   48.339571    54.145679       200000         1000       777  avgt    2  530844.502          ns/op
- * RawPoint_CompareGroovyJava.interpolateJava           48.339571    54.145679       200000         1000       777  avgt    2  322100.750          ns/op
- * RawPoint_CompareGroovyJava.isValidGroovy             48.339571    54.145679       200000         1000       777  avgt    2     114.306          ns/op
- * RawPoint_CompareGroovyJava.isValidGroovyStatic       48.339571    54.145679       200000         1000       777  avgt    2      13.111          ns/op
- * RawPoint_CompareGroovyJava.isValidJava               48.339571    54.145679       200000         1000       777  avgt    2      12.379          ns/op
+ * Benchmark                                           (latitude)  (longitude)  (timeDelta)  (timestamp)  (userId)  Mode  Cnt     Score   Error  Units
+ * RawPoint_CompareGroovyJava.interpolateGroovy         48.339571    54.145679       200000         1000       777  avgt    2  2570.549          ns/op
+ * RawPoint_CompareGroovyJava.interpolateGroovyStatic   48.339571    54.145679       200000         1000       777  avgt    2  4952.896          ns/op
+ * RawPoint_CompareGroovyJava.interpolateJava           48.339571    54.145679       200000         1000       777  avgt    2    69.163          ns/op
+ * RawPoint_CompareGroovyJava.isValidGroovy             48.339571    54.145679       200000         1000       777  avgt    2   117.825          ns/op
+ * RawPoint_CompareGroovyJava.isValidGroovyStatic       48.339571    54.145679       200000         1000       777  avgt    2    12.318          ns/op
+ * RawPoint_CompareGroovyJava.isValidJava               48.339571    54.145679       200000         1000       777  avgt    2    12.000          ns/op
  */
 
 @BenchmarkMode(Mode.AverageTime)
@@ -101,17 +102,17 @@ public class RawPoint_CompareGroovyJava {
     }
 
     @Benchmark
-    public List interpolateGroovyStatic() {
+    public Stream interpolateGroovyStatic() {
         return pointStatic.interpolate(config);
     }
 
     @Benchmark
-    public List interpolateGroovy() {
+    public Stream interpolateGroovy() {
         return pointDynamic.interpolate(config);
     }
 
     @Benchmark
-    public List interpolateJava() {
+    public Stream interpolateJava() {
         return pointJava.interpolate(config);
     }
 }

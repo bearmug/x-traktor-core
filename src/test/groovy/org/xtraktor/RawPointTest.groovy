@@ -4,6 +4,8 @@ import org.xtraktor.location.LocationConfig
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.util.stream.Collectors
+
 class RawPointTest extends Specification {
 
     @Unroll
@@ -27,7 +29,7 @@ class RawPointTest extends Specification {
                 userId: userId)
 
         when:
-        List<HashPoint> res = point.interpolate config
+        List<HashPoint> res = point.interpolate(config).collect Collectors.toList()
 
         then:
         res.size() == 1
@@ -65,7 +67,7 @@ class RawPointTest extends Specification {
                 nextPoint: nextPoint)
 
         when:
-        List<HashPoint> res = point.interpolate config
+        List<HashPoint> res = point.interpolate(config).collect Collectors.toList()
 
         then:
         res.size() == 2

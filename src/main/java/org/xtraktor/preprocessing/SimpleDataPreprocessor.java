@@ -24,7 +24,7 @@ public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor
         return pair(sort(input))
                 .parallelStream()
                 .filter(point -> point.isValid(config))
-                .flatMap(point -> point.interpolate(config).stream())
+                .flatMap(point -> point.interpolate(config))
                 .collect(Collectors.toList());
     }
 
