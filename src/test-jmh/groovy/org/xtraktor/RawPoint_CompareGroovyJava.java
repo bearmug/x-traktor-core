@@ -14,12 +14,12 @@ import java.util.concurrent.TimeUnit;
  * Sample output
  * <p>
  * Benchmark                                           (latitude)  (longitude)  (timeDelta)  (timestamp)  (userId)  Mode  Cnt       Score   Error  Units
- * RawPoint_CompareGroovyJava.interpolateGroovy         48.339571    54.145679       200000         1000       777  avgt    2  729469.434          ns/op
- * RawPoint_CompareGroovyJava.interpolateGroovyStatic   48.339571    54.145679       200000         1000       777  avgt    2  601408.884          ns/op
- * RawPoint_CompareGroovyJava.interpolateJava           48.339571    54.145679       200000         1000       777  avgt    2  322023.285          ns/op
- * RawPoint_CompareGroovyJava.isValidGroovy             48.339571    54.145679       200000         1000       777  avgt    2     129.492          ns/op
- * RawPoint_CompareGroovyJava.isValidGroovyStatic       48.339571    54.145679       200000         1000       777  avgt    2      12.357          ns/op
- * RawPoint_CompareGroovyJava.isValidJava               48.339571    54.145679       200000         1000       777  avgt    2      12.756          ns/op
+ * RawPoint_CompareGroovyJava.interpolateGroovy         48.339571    54.145679       200000         1000       777  avgt    2  686801.156          ns/op
+ * RawPoint_CompareGroovyJava.interpolateGroovyStatic   48.339571    54.145679       200000         1000       777  avgt    2  530844.502          ns/op
+ * RawPoint_CompareGroovyJava.interpolateJava           48.339571    54.145679       200000         1000       777  avgt    2  322100.750          ns/op
+ * RawPoint_CompareGroovyJava.isValidGroovy             48.339571    54.145679       200000         1000       777  avgt    2     114.306          ns/op
+ * RawPoint_CompareGroovyJava.isValidGroovyStatic       48.339571    54.145679       200000         1000       777  avgt    2      13.111          ns/op
+ * RawPoint_CompareGroovyJava.isValidJava               48.339571    54.145679       200000         1000       777  avgt    2      12.379          ns/op
  */
 
 @BenchmarkMode(Mode.AverageTime)

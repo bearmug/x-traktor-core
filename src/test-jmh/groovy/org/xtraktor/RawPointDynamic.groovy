@@ -50,11 +50,11 @@ class RawPointDynamic {
                     .round(LocationConfig.PRECISION)
 
             new HashPoint(
-                    longitude: pointLon,
-                    latitude: pointLat,
-                    timestamp: pointTime,
-                    userId: userId,
-                    geoHashFull: Geohasher.hash(new LatLng(pointLat, pointLon))
+                    Geohasher.hash(new LatLng(pointLat, pointLon)),
+                    pointLon,
+                    pointLat,
+                    pointTime,
+                    userId
             )
         }
         .collect(Collectors.toList())
