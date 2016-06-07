@@ -27,8 +27,8 @@ sourceSets {
     test.groovy.srcDirs += ['src/test/java']
 
     jmh {
-        java {
-            srcDirs = ['src/test-jmh/java']
+        groovy {
+            srcDirs = ['src/test-jmh/groovy']
             compileClasspath += test.compileClasspath
             runtimeClasspath += test.runtimeClasspath
         }
@@ -39,4 +39,10 @@ task benchDoubleCompare(type: JavaExec, group: 'jmh',
         description: 'bench performance for different double compare strategies') {
     classpath = sourceSets.jmh.runtimeClasspath
     main = 'org.xtraktor.RawPoint_CompareDoubleBenchmark'
+}
+
+task benchGroovyJava(type: JavaExec, group: 'jmh',
+        description: 'bench performance for java/groovy/groovy static implementations') {
+    classpath = sourceSets.jmh.runtimeClasspath
+    main = 'org.xtraktor.RawPoint_CompareGroovyJava'
 }

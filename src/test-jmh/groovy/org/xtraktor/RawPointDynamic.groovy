@@ -4,33 +4,19 @@ import com.google.common.math.DoubleMath
 import com.javadocmd.simplelatlng.Geohasher
 import com.javadocmd.simplelatlng.LatLng
 import groovy.transform.Canonical
-import groovy.transform.CompileStatic
 import org.xtraktor.location.LocationConfig
 
 import java.math.RoundingMode
 import java.util.stream.Collectors
 
-@Canonical
-@CompileStatic
-class RawPoint {
+class RawPointDynamic {
     double longitude
     double latitude
     long timestamp
     long userId
 
-    RawPoint nextPoint
+    RawPointDynamic nextPoint
 
-    /**
-     * Validates if point is:
-     * <p>
-     * <ul>
-     *     <li>not beyond time horzon</li>
-     *     <li>there is {@link #nextPoint} member variable</li>
-     *     <li>{@link #nextPoint} is closer than predefined tolerance</li>
-     * </ul>
-     * @param config common configuration to match against
-     * @return true if point could be used for data production
-     */
     boolean isValid(LocationConfig config) {
         timestamp >= config.timeMin &&
                 nextPoint != null &&

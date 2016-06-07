@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Validate two double numbers comparison performance.
  * Sample report:
  * <p>
  * Benchmark                                          (param1)  (param2)  Mode  Cnt   Score   Error  Units
