@@ -9,6 +9,7 @@ import org.xtraktor.location.LocationConfig
 
 import java.math.RoundingMode
 import java.util.stream.Collectors
+import java.util.stream.LongStream
 
 @Canonical
 @CompileStatic
@@ -52,25 +53,26 @@ class RawPoint {
                         RoundingMode.DOWN),
                 minIndex)
 
-        return (minIndex..maxIndex)
-                .parallelStream()
-                .map { it ->
-            long pointTime = config.timeMin + config.timeDelta * (it as Long)
-            def pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
+        return LongStream.rangeClosed(minIndex, maxIndex)
+                .parallel()
+                .mapToObj(
+                {
+                    long pointTime = config.timeMin + config.timeDelta * (it as Long)
+                    def pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
 
-            double pointLon = ((longitude + (nextPoint.longitude - longitude) * pointRatio) as Double)
-                    .round(LocationConfig.PRECISION)
-            double pointLat = ((latitude + (nextPoint.latitude - latitude) * pointRatio) as Double)
-                    .round(LocationConfig.PRECISION)
+                    double pointLon = ((longitude + (nextPoint.longitude - longitude) * pointRatio) as Double)
+                            .round(LocationConfig.PRECISION)
+                    double pointLat = ((latitude + (nextPoint.latitude - latitude) * pointRatio) as Double)
+                            .round(LocationConfig.PRECISION)
 
-            new HashPoint(
-                    Geohasher.hash(new LatLng(pointLat, pointLon)),
-                    pointLon,
-                    pointLat,
-                    pointTime,
-                    userId
-            )
-        }
-        .collect(Collectors.toList())
+                    new HashPoint(
+                            Geohasher.hash(new LatLng(pointLat, pointLon)),
+                            pointLon,
+                            pointLat,
+                            pointTime,
+                            userId
+                    )
+                })
+                .collect(Collectors.toList())
     }
 }

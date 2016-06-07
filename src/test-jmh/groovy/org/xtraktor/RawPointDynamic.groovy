@@ -3,11 +3,11 @@ package org.xtraktor
 import com.google.common.math.DoubleMath
 import com.javadocmd.simplelatlng.Geohasher
 import com.javadocmd.simplelatlng.LatLng
-import groovy.transform.Canonical
 import org.xtraktor.location.LocationConfig
 
 import java.math.RoundingMode
 import java.util.stream.Collectors
+import java.util.stream.LongStream
 
 class RawPointDynamic {
     double longitude
@@ -38,9 +38,9 @@ class RawPointDynamic {
                         RoundingMode.DOWN),
                 minIndex)
 
-        return (minIndex..maxIndex)
-                .parallelStream()
-                .map { it ->
+        return LongStream.rangeClosed(minIndex, maxIndex)
+                .parallel()
+                .mapToObj({
             long pointTime = config.timeMin + config.timeDelta * (it as Long)
             def pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
 
@@ -56,7 +56,7 @@ class RawPointDynamic {
                     pointTime,
                     userId
             )
-        }
-        .collect(Collectors.toList())
+        })
+                .collect(Collectors.toList())
     }
 }
