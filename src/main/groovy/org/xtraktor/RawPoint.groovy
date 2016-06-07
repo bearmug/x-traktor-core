@@ -57,7 +57,7 @@ class RawPoint {
                 .parallel()
                 .mapToObj(
                 {
-                    long pointTime = config.timeMin + config.timeDelta * (it as Long)
+                    long pointTime = config.timeMin + config.timeDelta * it
                     def pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
 
                     double pointLon = ((longitude + (nextPoint.longitude - longitude) * pointRatio) as Double)
