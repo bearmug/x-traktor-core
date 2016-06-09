@@ -1,19 +1,18 @@
 package org.xtraktor.preprocessing;
 
 import org.xtraktor.DataPreprocessor;
-import org.xtraktor.RawPoint;
 import org.xtraktor.HashPoint;
+import org.xtraktor.RawPoint;
 import org.xtraktor.location.LocationConfig;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor {
 
-    final LocationConfig config;
+    private final LocationConfig config;
 
     public SimpleDataPreprocessor(LocationConfig config) {
         this.config = config;
