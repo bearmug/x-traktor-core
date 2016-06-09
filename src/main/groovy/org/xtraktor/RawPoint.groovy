@@ -48,11 +48,20 @@ class RawPoint {
                 (timestamp - config.timeMin) / config.timeDelta,
                 RoundingMode.UP)
 
+
+        def delta = (nextPoint.timestamp - config.timeMin) / config.timeDelta
+        if (DoubleMath.roundToLong(delta, RoundingMode.UP) == minIndex &&
+                (nextPoint.timestamp - config.timeMin) % config.timeDelta != 0) {
+            return Stream.empty()
+        }
+
         long maxIndex = Math.max(
-                DoubleMath.roundToLong(
-                        (nextPoint.timestamp - config.timeMin) / config.timeDelta,
-                        RoundingMode.DOWN),
+                DoubleMath.roundToLong(delta, RoundingMode.DOWN),
                 minIndex)
+
+        if (minIndex < 0 || maxIndex < 0) {
+            return Stream.empty()
+        }
 
         return LongStream.rangeClosed(minIndex, maxIndex)
                 .parallel()

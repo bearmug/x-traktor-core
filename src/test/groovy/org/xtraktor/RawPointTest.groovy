@@ -38,7 +38,7 @@ class RawPointTest extends Specification {
         mode                  | lon     | lat     | time  | nextLon | nextLat | nextTime | targetLon | targetLat | targetTime | hash           | userId
         'both points in past' | 50.3656 | 45.2891 | 500   | 50.3658 | 45.2893 | 1500     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
         'one point in past'   | 50.3657 | 45.2892 | 1000  | 50.3658 | 45.2893 | 15000    | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
-        'timeDelta too big'   | 50.3656 | 45.2891 | 50001 | 50.3657 | 45.2892 | 50100    | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
+        'timeDelta too big'   | 50.3656 | 45.2891 | 10001 | 50.3657 | 45.2892 | 10002    | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
     }
 
     @Unroll
