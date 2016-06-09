@@ -9,6 +9,39 @@ import java.util.stream.Collectors
 class RawPointTest extends Specification {
 
     @Unroll
+    def "interpolation for none executed: #mode"() {
+
+        given: //1-second precision config with 1.0 lon/lat tolerance
+        LocationConfig config = new LocationConfig(
+                timeMin: 10000,
+                tolerance: 1.0,
+                timeDelta: 1000)
+        RawPoint nextPoint = new RawPoint(
+                longitude: nextLon,
+                latitude: nextLat,
+                timestamp: nextTime,
+                userId: userId)
+        RawPoint point = new RawPoint(
+                longitude: lon,
+                latitude: lat,
+                timestamp: time,
+                nextPoint: nextPoint,
+                userId: userId)
+
+        when:
+        List<HashPoint> res = point.interpolate(config).collect Collectors.toList()
+
+        then:
+        res.isEmpty()
+
+        where:
+        mode                  | lon     | lat     | time  | nextLon | nextLat | nextTime | targetLon | targetLat | targetTime | hash           | userId
+        'both points in past' | 50.3656 | 45.2891 | 500   | 50.3658 | 45.2893 | 1500     | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
+        'one point in past'   | 50.3657 | 45.2892 | 1000  | 50.3658 | 45.2893 | 15000    | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
+        'timeDelta too big'   | 50.3656 | 45.2891 | 50001 | 50.3657 | 45.2892 | 50100    | 50.3657   | 45.2892   | 1000       | 'v05cdhehtygc' | 777
+    }
+
+    @Unroll
     def "interpolation for single point executed: #mode"() {
 
         given: //1-second precision config with 1.0 lon/lat tolerance
