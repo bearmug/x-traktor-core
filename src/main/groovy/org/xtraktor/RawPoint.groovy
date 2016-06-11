@@ -21,21 +21,9 @@ class RawPoint {
 
     RawPoint nextPoint
 
-    /**
-     * Validates if point is:
-     * <p>
-     * <ul>
-     *     <li>not beyond time horzon</li>
-     *     <li>there is {@link #nextPoint} member variable</li>
-     *     <li>{@link #nextPoint} is closer than predefined tolerance</li>
-     * </ul>
-     * @param config common configuration to match against
-     * @return true if point could be used for data production
-     */
     boolean isValid(LocationConfig config) {
         timestamp >= config.timeMin &&
-                nextPoint != null &&
-                nextPoint.timestamp > timestamp &&
+                nextPoint?.timestamp > timestamp &&
                 DoubleMath.fuzzyEquals(longitude, nextPoint.longitude, config.tolerance) &&
                 DoubleMath.fuzzyEquals(latitude, nextPoint.latitude, config.tolerance)
 

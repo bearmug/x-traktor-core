@@ -19,8 +19,7 @@ class RawPointDynamic {
 
     boolean isValid(LocationConfig config) {
         timestamp >= config.timeMin &&
-                nextPoint != null &&
-                nextPoint.timestamp > timestamp &&
+                nextPoint?.timestamp > timestamp &&
                 DoubleMath.fuzzyEquals(longitude, nextPoint.longitude, config.tolerance) &&
                 DoubleMath.fuzzyEquals(latitude, nextPoint.latitude, config.tolerance)
 
