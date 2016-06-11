@@ -14,17 +14,17 @@ import java.util.stream.Stream;
  * Sample output
  * <p>
  * Benchmark                                           (latitude)  (longitude)  (timeDelta)  (timestamp)  (userId)  Mode  Cnt     Score   Error  Units
- * RawPoint_CompareGroovyJava.interpolateGroovy         48.339571    54.145679       200000         1000       777  avgt    2   532.223          ns/op
- * RawPoint_CompareGroovyJava.interpolateGroovyStatic   48.339571    54.145679       200000         1000       777  avgt    2  2787.173          ns/op
- * RawPoint_CompareGroovyJava.interpolateJava           48.339571    54.145679       200000         1000       777  avgt    2    73.922          ns/op
- * RawPoint_CompareGroovyJava.isValidGroovy             48.339571    54.145679       200000         1000       777  avgt    2   134.154          ns/op
- * RawPoint_CompareGroovyJava.isValidGroovyStatic       48.339571    54.145679       200000         1000       777  avgt    2    18.892          ns/op
- * RawPoint_CompareGroovyJava.isValidJava               48.339571    54.145679       200000         1000       777  avgt    2    12.297          ns/op
+ * RawPoint_CompareGroovyJava.interpolateGroovy         48.339571    54.145679       200000         1000       777  avgt    2   638.319          ns/op
+ * RawPoint_CompareGroovyJava.interpolateGroovyStatic   48.339571    54.145679       200000         1000       777  avgt    2  2917.649          ns/op
+ * RawPoint_CompareGroovyJava.interpolateJava           48.339571    54.145679       200000         1000       777  avgt    2    74.582          ns/op
+ * RawPoint_CompareGroovyJava.isValidGroovy             48.339571    54.145679       200000         1000       777  avgt    2    18.093          ns/op
+ * RawPoint_CompareGroovyJava.isValidGroovyStatic       48.339571    54.145679       200000         1000       777  avgt    2    17.871          ns/op
+ * RawPoint_CompareGroovyJava.isValidJava               48.339571    54.145679       200000         1000       777  avgt    2    12.344          ns/op
  */
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Warmup(iterations = 4, time = 2)
+@Warmup(iterations = 2, time = 2)
 @Measurement(iterations = 2, time = 2)
 @Fork(1)
 @Threads(1)

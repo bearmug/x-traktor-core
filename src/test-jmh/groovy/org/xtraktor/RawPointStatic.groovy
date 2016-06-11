@@ -51,10 +51,9 @@ class RawPointStatic {
 
         return LongStream.rangeClosed(minIndex, maxIndex)
                 .parallel()
-                .mapToObj(
-                {
-                    long pointTime = config.getTimeMin() + config.getTimeDelta() * it;
-                    double pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp);
+                .mapToObj { long index ->
+                    long pointTime = config.getTimeMin() + config.getTimeDelta() * index;
+                    double pointRatio = (double) (pointTime - timestamp) / (nextPoint.timestamp - timestamp);
 
                     double pointLon = new BigDecimal(
                             longitude + (nextPoint.longitude - longitude) * pointRatio)
@@ -72,6 +71,6 @@ class RawPointStatic {
                             pointTime,
                             userId
                     )
-                })
+                }
     }
 }

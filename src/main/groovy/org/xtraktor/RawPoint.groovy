@@ -4,6 +4,7 @@ import com.google.common.math.DoubleMath
 import com.javadocmd.simplelatlng.Geohasher
 import com.javadocmd.simplelatlng.LatLng
 import groovy.transform.Canonical
+import groovy.transform.CompileStatic
 import org.xtraktor.location.LocationConfig
 
 import java.math.RoundingMode
@@ -19,6 +20,7 @@ class RawPoint {
 
     RawPoint nextPoint
 
+    @CompileStatic
     boolean isValid(LocationConfig config) {
         timestamp >= config.timeMin &&
                 nextPoint?.timestamp > timestamp &&
@@ -49,17 +51,16 @@ class RawPoint {
 
         return LongStream.rangeClosed(minIndex, maxIndex)
                 .parallel()
-                .mapToObj(
-                {
+                .mapToObj { long it ->
                     long pointTime = config.getTimeMin() + config.getTimeDelta() * it;
-                    double pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp);
+                    double pointRatio = (double) (pointTime - timestamp) / (nextPoint.timestamp - timestamp);
 
                     double pointLon = new BigDecimal(
-                            longitude + (nextPoint.longitude - longitude) * pointRatio)
+                            (double) (longitude + (nextPoint.longitude - longitude) * pointRatio))
                             .setScale(LocationConfig.getPRECISION(), BigDecimal.ROUND_HALF_EVEN)
                             .doubleValue();
                     double pointLat = new BigDecimal(
-                            latitude + (nextPoint.latitude - latitude) * pointRatio)
+                            (double) (latitude + (nextPoint.latitude - latitude) * pointRatio))
                             .setScale(LocationConfig.getPRECISION(), BigDecimal.ROUND_HALF_EVEN)
                             .doubleValue();
 
@@ -70,6 +71,6 @@ class RawPoint {
                             pointTime,
                             userId
                     )
-                })
+                }
     }
 }
