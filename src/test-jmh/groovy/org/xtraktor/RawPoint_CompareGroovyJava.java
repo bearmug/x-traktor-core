@@ -14,17 +14,17 @@ import java.util.stream.Stream;
  * Sample output
  * <p>
  * Benchmark                                           (latitude)  (longitude)  (timeDelta)  (timestamp)  (userId)  Mode  Cnt     Score   Error  Units
- * RawPoint_CompareGroovyJava.interpolateGroovy         48.339571    54.145679       200000         1000       777  avgt    2  2570.549          ns/op
- * RawPoint_CompareGroovyJava.interpolateGroovyStatic   48.339571    54.145679       200000         1000       777  avgt    2  4952.896          ns/op
- * RawPoint_CompareGroovyJava.interpolateJava           48.339571    54.145679       200000         1000       777  avgt    2    69.163          ns/op
- * RawPoint_CompareGroovyJava.isValidGroovy             48.339571    54.145679       200000         1000       777  avgt    2   117.825          ns/op
- * RawPoint_CompareGroovyJava.isValidGroovyStatic       48.339571    54.145679       200000         1000       777  avgt    2    12.318          ns/op
- * RawPoint_CompareGroovyJava.isValidJava               48.339571    54.145679       200000         1000       777  avgt    2    12.000          ns/op
+ * RawPoint_CompareGroovyJava.interpolateGroovy         48.339571    54.145679       200000         1000       777  avgt    2   532.223          ns/op
+ * RawPoint_CompareGroovyJava.interpolateGroovyStatic   48.339571    54.145679       200000         1000       777  avgt    2  2787.173          ns/op
+ * RawPoint_CompareGroovyJava.interpolateJava           48.339571    54.145679       200000         1000       777  avgt    2    73.922          ns/op
+ * RawPoint_CompareGroovyJava.isValidGroovy             48.339571    54.145679       200000         1000       777  avgt    2   134.154          ns/op
+ * RawPoint_CompareGroovyJava.isValidGroovyStatic       48.339571    54.145679       200000         1000       777  avgt    2    18.892          ns/op
+ * RawPoint_CompareGroovyJava.isValidJava               48.339571    54.145679       200000         1000       777  avgt    2    12.297          ns/op
  */
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Warmup(iterations = 2, time = 2)
+@Warmup(iterations = 4, time = 2)
 @Measurement(iterations = 2, time = 2)
 @Fork(1)
 @Threads(1)
@@ -48,9 +48,9 @@ public class RawPoint_CompareGroovyJava {
 
     private LocationConfig config;
 
-    private RawPoint pointStatic;
+    private RawPointStatic pointStatic;
 
-    private RawPointDynamic pointDynamic;
+    private RawPoint pointDynamic;
 
     private RawPointJava pointJava;
 
@@ -60,19 +60,19 @@ public class RawPoint_CompareGroovyJava {
 
         RawPoint nextPoint = new RawPoint(
                 longitude + .5, latitude + .5, timestamp + timeDelta, userId);
-        pointStatic = new RawPoint(longitude, latitude, timestamp, userId, nextPoint);
+        pointDynamic = new RawPoint(longitude, latitude, timestamp, userId, nextPoint);
 
-        RawPointDynamic nextPointDynamic = new RawPointDynamic();
-        nextPointDynamic.setLongitude(longitude + .5);
-        nextPointDynamic.setLatitude(latitude + .5);
-        nextPointDynamic.setTimestamp(timestamp + timeDelta);
-        nextPointDynamic.setUserId(userId);
-        pointDynamic = new RawPointDynamic();
-        pointDynamic.setLongitude(longitude);
-        pointDynamic.setLatitude(latitude);
-        pointDynamic.setTimestamp(timestamp);
-        pointDynamic.setUserId(userId);
-        pointDynamic.setNextPoint(nextPointDynamic);
+        RawPointStatic nextPointStatic = new RawPointStatic();
+        nextPointStatic.setLongitude(longitude + .5);
+        nextPointStatic.setLatitude(latitude + .5);
+        nextPointStatic.setTimestamp(timestamp + timeDelta);
+        nextPointStatic.setUserId(userId);
+        pointStatic = new RawPointStatic();
+        pointStatic.setLongitude(longitude);
+        pointStatic.setLatitude(latitude);
+        pointStatic.setTimestamp(timestamp);
+        pointStatic.setUserId(userId);
+        pointStatic.setNextPoint(nextPointStatic);
 
         RawPointJava nextPointJava = new RawPointJava(
                 longitude + .5, latitude + .5, timestamp + timeDelta, userId, null);

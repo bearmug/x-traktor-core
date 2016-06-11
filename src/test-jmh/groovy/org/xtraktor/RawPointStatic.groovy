@@ -19,7 +19,7 @@ class RawPointStatic {
     long timestamp
     long userId
 
-    RawPoint nextPoint
+    RawPointStatic nextPoint
 
     boolean isValid(LocationConfig config) {
         timestamp >= config.timeMin &&
