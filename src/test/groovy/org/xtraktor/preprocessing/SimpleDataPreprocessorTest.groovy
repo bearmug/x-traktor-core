@@ -4,7 +4,9 @@ import org.xtraktor.HashPoint
 import org.xtraktor.RawPoint
 import org.xtraktor.location.LocationConfig
 import spock.lang.Specification
+import spock.lang.Unroll
 
+import java.util.stream.Collectors
 import java.util.stream.Stream
 
 class SimpleDataPreprocessorTest extends Specification {
@@ -64,5 +66,42 @@ class SimpleDataPreprocessorTest extends Specification {
 
         then:
         out.collect().empty
+    }
+
+    @Unroll
+    def "two points normalized: #mode"() {
+
+        given: //1-second precision config with 1.0lon/lat tolerance
+        LocationConfig config = new LocationConfig(
+                timeMin: 0,
+                tolerance: 1.0,
+                timeDelta: 1000)
+        RawPoint nextPoint = new RawPoint(
+                longitude: nextLon,
+                latitude: nextLat,
+                timestamp: nextTime)
+        RawPoint point = new RawPoint(
+                longitude: lon,
+                latitude: lat,
+                timestamp: time,
+                nextPoint: nextPoint)
+
+        when:
+        List<HashPoint> res = new SimpleDataPreprocessor(config)
+                .normalize([point, nextPoint])
+                .collect(Collectors.toList())
+
+        then:
+        res.size() == 2
+        res.each {
+            assert it.geoHashFull.indexOf(hash) == 0
+        }
+
+        where:
+        mode                     | lon     | lat     | time | nextLon | nextLat | nextTime | hash
+        'inside range'           | 50.3656 | 45.2891 | 500  | 50.3658 | 45.2893 | 2500     | 'v05cdhe'
+        'point from left limit'  | 50.3647 | 45.2892 | 1000 | 50.3652 | 45.2893 | 2500     | 'v05cdhd'
+        'point from right limit' | 50.3656 | 45.2891 | 500  | 50.3654 | 45.2889 | 2000     | 'v05cdh'
+        'point from both limits' | 50.3653 | 45.2892 | 1000 | 50.3655 | 45.2894 | 2000     | 'v05cdh'
     }
 }
