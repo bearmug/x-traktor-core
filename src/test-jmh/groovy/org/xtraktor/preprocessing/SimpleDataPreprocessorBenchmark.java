@@ -17,12 +17,15 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 /**
- * Benchmark                                                     (latitude)  (longitude)  (timeDelta)  (timestamp)  (userId)  Mode  Cnt    Score   Error  Units
- * SimpleDataPreprocessorBenchmark.benchmarkInterpolateOrdered    48.339571    54.145679       200000         1000       777  avgt    2  410.119          ns/op
- * SimpleDataPreprocessorBenchmark.benchmarkInterpolateReversed   48.339571    54.145679       200000         1000       777  avgt    2  635.843          ns/op
- * SimpleDataPreprocessorBenchmark.benchmarkPair                  48.339571    54.145679       200000         1000       777  avgt    2  320.250          ns/op
- * SimpleDataPreprocessorBenchmark.benchmarkSortOrdered           48.339571    54.145679       200000         1000       777  avgt    2   72.766          ns/op
- * SimpleDataPreprocessorBenchmark.benchmarkSortReversed          48.339571    54.145679       200000         1000       777  avgt    2  277.561          ns/op
+ * Single iteration takes 1000 points and build 1000 interpolated
+ * subintervals for each pair. Which means ~1Mln points into iteration output.
+ * <p>
+ * Benchmark                                                     (latitude)  (longitude)  (timeDelta)  (timestamp)  (userId)  Mode  Cnt      Score   Error  Units
+ * SimpleDataPreprocessorBenchmark.benchmarkInterpolateOrdered    48.339571    54.145679      1000000         1000       777  avgt    2  12631.529          ns/op
+ * SimpleDataPreprocessorBenchmark.benchmarkInterpolateReversed   48.339571    54.145679      1000000         1000       777  avgt    2  17145.413          ns/op
+ * SimpleDataPreprocessorBenchmark.benchmarkPair                  48.339571    54.145679      1000000         1000       777  avgt    2  10185.444          ns/op
+ * SimpleDataPreprocessorBenchmark.benchmarkSortOrdered           48.339571    54.145679      1000000         1000       777  avgt    2   2086.020          ns/op
+ * SimpleDataPreprocessorBenchmark.benchmarkSortReversed          48.339571    54.145679      1000000         1000       777  avgt    2   6720.635          ns/op
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -42,7 +45,7 @@ public class SimpleDataPreprocessorBenchmark {
     @Param({"1000"})
     long timestamp;
 
-    @Param({"200000"})
+    @Param({"1000000"})
     long timeDelta;
 
     @Param({"777"})
@@ -58,7 +61,7 @@ public class SimpleDataPreprocessorBenchmark {
     @Setup
     public void before() {
         final Random random = new Random(1);
-        points = LongStream.rangeClosed(0, 30)
+        points = LongStream.rangeClosed(0, 1000)
                 .mapToObj(it -> {
                     double lon = longitude + it * SEQUENTIAL_SHIFT_BASE
                             + random.nextDouble() * RANDOM_SHIFT_BASE;
