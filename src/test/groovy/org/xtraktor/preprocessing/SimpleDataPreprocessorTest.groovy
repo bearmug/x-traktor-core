@@ -1,8 +1,11 @@
 package org.xtraktor.preprocessing
 
+import org.xtraktor.HashPoint
 import org.xtraktor.RawPoint
 import org.xtraktor.location.LocationConfig
 import spock.lang.Specification
+
+import java.util.stream.Stream
 
 class SimpleDataPreprocessorTest extends Specification {
 
@@ -48,5 +51,18 @@ class SimpleDataPreprocessorTest extends Specification {
             assert it.timestamp > latestTimestamp
             latestTimestamp = it.timestamp
         }
+    }
+
+    def "normalization ignored for invalid point"() {
+        given:
+        def point = Mock(RawPoint)
+        point.isValid(_) >> false
+
+        when:
+        Stream<HashPoint> out = new SimpleDataPreprocessor(
+                new LocationConfig(timeMin: 0)).normalize([point] * 10)
+
+        then:
+        out.collect().empty
     }
 }
