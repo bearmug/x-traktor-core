@@ -32,30 +32,40 @@ class RawPointDynamic {
                 (timestamp - config.timeMin) / config.timeDelta,
                 RoundingMode.UP)
 
+
+        def delta = (nextPoint.timestamp - config.timeMin) / config.timeDelta
+        if (DoubleMath.roundToLong(delta, RoundingMode.UP) == minIndex &&
+                (nextPoint.timestamp - config.timeMin) % config.timeDelta != 0) {
+            return Stream.empty()
+        }
+
         long maxIndex = Math.max(
-                DoubleMath.roundToLong(
-                        (nextPoint.timestamp - config.timeMin) / config.timeDelta,
-                        RoundingMode.DOWN),
+                DoubleMath.roundToLong(delta, RoundingMode.DOWN),
                 minIndex)
+
+        if (minIndex < 0 || maxIndex < 0) {
+            return Stream.empty()
+        }
 
         return LongStream.rangeClosed(minIndex, maxIndex)
                 .parallel()
-                .mapToObj({
-            long pointTime = config.timeMin + config.timeDelta * it
-            def pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
+                .mapToObj(
+                {
+                    long pointTime = config.timeMin + config.timeDelta * it
+                    def pointRatio = (pointTime - timestamp) / (nextPoint.timestamp - timestamp)
 
-            double pointLon = ((longitude + (nextPoint.longitude - longitude) * pointRatio) as Double)
-                    .round(LocationConfig.PRECISION)
-            double pointLat = ((latitude + (nextPoint.latitude - latitude) * pointRatio) as Double)
-                    .round(LocationConfig.PRECISION)
+                    double pointLon = ((longitude + (nextPoint.longitude - longitude) * pointRatio) as Double)
+                            .round(LocationConfig.PRECISION)
+                    double pointLat = ((latitude + (nextPoint.latitude - latitude) * pointRatio) as Double)
+                            .round(LocationConfig.PRECISION)
 
-            new HashPoint(
-                    Geohasher.hash(new LatLng(pointLat, pointLon)),
-                    pointLon,
-                    pointLat,
-                    pointTime,
-                    userId
-            )
-        })
+                    new HashPoint(
+                            Geohasher.hash(new LatLng(pointLat, pointLon)),
+                            pointLon,
+                            pointLat,
+                            pointTime,
+                            userId
+                    )
+                })
     }
 }

@@ -43,12 +43,19 @@ public class RawPointJava {
                 (timestamp - config.getTimeMin()) / config.getTimeDelta(),
                 RoundingMode.UP);
 
+        double delta = (nextPoint.timestamp - config.getTimeMin()) / config.getTimeDelta();
+        if (DoubleMath.roundToLong(delta, RoundingMode.UP) == minIndex &&
+                (nextPoint.timestamp - config.getTimeMin()) % config.getTimeDelta() != 0) {
+            return Stream.empty();
+        }
+
         long maxIndex = Math.max(
-                DoubleMath.roundToLong(
-                        (nextPoint.timestamp - config.getTimeMin()) / config.getTimeDelta(),
-                        RoundingMode.DOWN),
+                DoubleMath.roundToLong(delta, RoundingMode.DOWN),
                 minIndex);
 
+        if (minIndex < 0 || maxIndex < 0) {
+            return Stream.empty();
+        }
 
         return LongStream.rangeClosed(minIndex, maxIndex)
                 .parallel()
