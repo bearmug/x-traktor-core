@@ -49,3 +49,9 @@ task benchGroovyJava(type: JavaExec, group: 'jmh',
     classpath = sourceSets.jmh.runtimeClasspath
     main = 'org.xtraktor.RawPoint_CompareGroovyJava'
 }
+
+task benchPreprocessor(type: JavaExec, group: 'jmh',
+        description: 'bench performance for data preprocessor sorted/reversed input') {
+    classpath = sourceSets.jmh.runtimeClasspath
+    main = 'org.xtraktor.preprocessing.SimpleDataPreprocessorBenchmark'
+}
