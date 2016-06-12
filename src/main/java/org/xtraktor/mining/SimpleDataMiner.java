@@ -20,7 +20,7 @@ public class SimpleDataMiner implements DataMiner {
 
     @Override
     public Stream<HashPoint> matchForPoint(HashPoint input, int hashPrecision) {
-        return storage.findByHashAndTime(input);
+        return storage.findByHashAndTime(input, hashPrecision);
     }
 
     @Override
