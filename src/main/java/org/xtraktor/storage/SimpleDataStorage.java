@@ -33,13 +33,11 @@ public class SimpleDataStorage implements DataStorage {
     private Multimap<String, HashPoint> getByTimestamp(long timestamp) {
         Multimap<String, HashPoint> res = map.get(timestamp);
         if (res == null) {
-            Multimap<String, HashPoint> newElement = Multimaps.
-                    synchronizedSetMultimap(HashMultimap.create());
             synchronized (map) {
                 res = map.get(timestamp);
                 if (res == null) {
-                    res = newElement;
-                    map.put(timestamp, res);
+                    map.put(timestamp, Multimaps.
+                            synchronizedSetMultimap(HashMultimap.create()));
                 }
             }
 
