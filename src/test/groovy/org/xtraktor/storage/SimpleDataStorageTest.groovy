@@ -2,7 +2,7 @@ package org.xtraktor.storage
 
 import spock.lang.Specification
 
-import static junit.framework.Assert.fail
+import static junit.framework.TestCase.fail
 
 class SimpleDataStorageTest extends Specification {
 
