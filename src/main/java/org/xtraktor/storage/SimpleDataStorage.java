@@ -7,6 +7,7 @@ import com.google.common.collect.SetMultimap;
 import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,22 +32,28 @@ public class SimpleDataStorage implements DataStorage {
     }
 
     private Multimap<String, HashPoint> getByTimestamp(long timestamp) {
-        Multimap<String, HashPoint> res = map.get(timestamp);
-        if (res == null) {
+        Multimap<String, HashPoint> bucket = map.get(timestamp);
+        if (bucket == null) {
             synchronized (map) {
-                res = map.get(timestamp);
-                if (res == null) {
+                bucket = map.get(timestamp);
+                if (bucket == null) {
                     map.put(timestamp, Multimaps.
                             synchronizedSetMultimap(HashMultimap.create()));
                 }
             }
 
         }
-        return res;
+        return bucket;
     }
 
     @Override
     public Stream<HashPoint> findByHashAndTime(HashPoint input, int hashPrecision) {
-        return null;
+
+        Multimap<String, HashPoint> bucket = map.get(input.getTimestamp());
+        if (bucket == null) {
+            return Stream.empty();
+        }
+
+        return bucket.get(input.getHash(hashPrecision)).stream();
     }
 }
