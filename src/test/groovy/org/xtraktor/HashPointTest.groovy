@@ -86,4 +86,31 @@ class HashPointTest extends Specification {
         0.0        | 0.00000001 | 14
         0.00000001 | 0.00000001 | 14
     }
+
+    def "getHash providing length according precision"() {
+        given:
+        String template = '1234567890'
+        HashPoint p = new HashPoint(geoHashFull: template)
+
+        when:
+        String hashActual = p.getHash(precision)
+
+        then:
+        hashActual == hashExpected
+
+        where:
+        precision | hashExpected
+        1         | '1'
+        2         | '12'
+        3         | '123'
+        4         | '1234'
+        5         | '12345'
+        6         | '123456'
+        7         | '1234567'
+        8         | '12345678'
+        9         | '123456789'
+        10        | '1234567890'
+        11        | '1234567890'
+        12        | '1234567890'
+    }
 }

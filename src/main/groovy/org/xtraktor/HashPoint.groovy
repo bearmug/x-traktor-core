@@ -12,4 +12,8 @@ class HashPoint {
     double latitude
     long timestamp
     long userId
+
+    public String getHash(int length) {
+        geoHashFull.take length
+    }
 }
