@@ -52,6 +52,9 @@ public class SimpleDataStorage implements DataStorage {
             return Stream.empty();
         }
 
-        return bucket.get(input.getHash(hashPrecision)).stream();
+        return bucket.get(input.getHash(hashPrecision))
+                .stream()
+                .filter(p ->
+                        p != input && p.getUserId() != input.getUserId());
     }
 }

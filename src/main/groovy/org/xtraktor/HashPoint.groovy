@@ -14,6 +14,9 @@ class HashPoint {
     long userId
 
     public String getHash(int length) {
+        if (geoHashFull == null) {
+            throw new IllegalStateException("Please avoid null geohash")
+        }
         geoHashFull.take length
     }
 }
