@@ -1,11 +1,11 @@
 package org.xtraktor.location
 
-import groovy.transform.Immutable
+import groovy.transform.Canonical
 
-@Immutable
+@Canonical
 class LocationConfig {
 
-    static int PRECISION = 6
+    public static int PRECISION = 8
     double tolerance = 1.0
     int hashPrecision
     long timeMin

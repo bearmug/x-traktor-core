@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
+import org.xtraktor.location.LocationConfig;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,10 +13,9 @@ import java.util.stream.Stream;
 
 public class SimpleDataStorage implements DataStorage {
 
-    private static final int DEFAULT_GEO_HASH_PRECISION = 8;
     private final Map<Long, Multimap<String, HashPoint>> map = new ConcurrentHashMap<>();
 
-    private int precision = DEFAULT_GEO_HASH_PRECISION;
+    private int precision = LocationConfig.PRECISION;
 
     @Override
     public boolean save(Stream<HashPoint> points) {

@@ -2,6 +2,7 @@ package org.xtraktor.storage;
 
 import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
+import org.xtraktor.location.LocationConfig;
 import redis.clients.jedis.Jedis;
 
 import java.util.stream.Stream;
@@ -11,8 +12,7 @@ public class BigLocalDataStorage implements DataStorage {
     private final StorageUtility utility = new StorageUtility();
     private final Jedis jedis;
 
-    private static final int DEFAULT_GEO_HASH_PRECISION = 8;
-    private int precision = DEFAULT_GEO_HASH_PRECISION;
+    private int precision = LocationConfig.PRECISION;
 
     public BigLocalDataStorage(String host, int port) {
         this.jedis = new Jedis(host, port);
@@ -31,7 +31,7 @@ public class BigLocalDataStorage implements DataStorage {
 
     @Override
     public Stream<HashPoint> findByHashAndTime(HashPoint input, int hashPrecision) {
-        return jedis.blpop(1000, utility.generateKey(input,precision))
+        return jedis.blpop(1000, utility.generateKey(input, precision))
                 .parallelStream()
                 .map(utility::deserialize);
     }
