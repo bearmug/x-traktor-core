@@ -6,7 +6,7 @@ import org.xtraktor.HashPoint;
 
 import java.io.IOException;
 
-public class StorageUtility {
+class StorageUtility {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
