@@ -26,7 +26,7 @@ class StorageUtility {
         }
     }
 
-    String generateKey(HashPoint point, int precision) {
+    String getKey(HashPoint point, int precision) {
         return point.getHash(precision) + "-" + point.getTimestamp();
     }
 }
