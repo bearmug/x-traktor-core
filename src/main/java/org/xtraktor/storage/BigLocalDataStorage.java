@@ -12,7 +12,7 @@ public class BigLocalDataStorage implements DataStorage {
     private final StorageUtility utility = new StorageUtility();
     private final Jedis jedis;
 
-    private int precision = LocationConfig.PRECISION;
+    int precision = LocationConfig.PRECISION;
 
     public BigLocalDataStorage(String host, int port) {
         this.jedis = new Jedis(host, port);
