@@ -8,7 +8,7 @@ import spock.lang.Unroll
 
 import java.util.stream.Collectors
 
-class BigLocalDataStorageTest extends Specification {
+class RedisDataStorageTest extends Specification {
 
     static final long USER_ID = 777
     static final long TIME = Long.MAX_VALUE
@@ -20,14 +20,14 @@ class BigLocalDataStorageTest extends Specification {
     volatile RedisServer redisServer
 
     @Shared
-    volatile BigLocalDataStorage storage
+    volatile RedisDataStorage storage
 
     def setupSpec() {
         int port = utility.freePort
         redisServer = new RedisServer(port)
         redisServer.start()
 
-        storage = new BigLocalDataStorage("localhost", port)
+        storage = new RedisDataStorage("localhost", port)
     }
 
     def setup() {

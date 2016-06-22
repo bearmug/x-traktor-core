@@ -7,12 +7,12 @@ import redis.clients.jedis.JedisPool;
 
 import java.util.stream.Stream;
 
-public class BigLocalDataStorage implements DataStorage {
+public class RedisDataStorage implements DataStorage {
 
     private final StorageUtility utility = new StorageUtility();
     private final JedisPool pool;
 
-    public BigLocalDataStorage(String host, int port) {
+    public RedisDataStorage(String host, int port) {
         this.pool = new JedisPool(host, port);
     }
 

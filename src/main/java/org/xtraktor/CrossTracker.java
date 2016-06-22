@@ -3,7 +3,7 @@ package org.xtraktor;
 import org.xtraktor.location.LocationConfig;
 import org.xtraktor.mining.SimpleDataMiner;
 import org.xtraktor.preprocessing.SimpleDataPreprocessor;
-import org.xtraktor.storage.BigLocalDataStorage;
+import org.xtraktor.storage.RedisDataStorage;
 import org.xtraktor.storage.SimpleDataStorage;
 
 /**
@@ -40,7 +40,7 @@ public class CrossTracker {
      */
     public static CrossTracker withRedis(LocationConfig config,
                                          String host, int port) {
-        return new CrossTracker(config, new BigLocalDataStorage(host, port));
+        return new CrossTracker(config, new RedisDataStorage(host, port));
     }
 
     /**
