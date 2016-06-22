@@ -17,10 +17,10 @@ class BigLocalDataStorageTest extends Specification {
     StorageUtility utility = new StorageUtility()
 
     @Shared
-    RedisServer redisServer
+    volatile RedisServer redisServer
 
     @Shared
-    BigLocalDataStorage storage
+    volatile BigLocalDataStorage storage
 
     def setupSpec() {
         int port = utility.freePort
