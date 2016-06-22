@@ -7,7 +7,7 @@ class LocationConfig {
 
     public static int PRECISION = 8
     double tolerance = 1.0
-    int hashPrecision
+    int hashPrecision = 8
     long timeMin
     long timeDelta
 }

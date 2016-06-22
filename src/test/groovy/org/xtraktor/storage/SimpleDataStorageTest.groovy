@@ -18,7 +18,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         HashPoint stored = storage.findByHashAndTime(input, precision).findAny().get()
 
         then:
@@ -39,7 +39,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision + 1)
         Optional<HashPoint> stored = storage.findByHashAndTime(input, precision).findAny()
 
         then:
@@ -54,13 +54,12 @@ class SimpleDataStorageTest extends Specification {
     }
 
     @Unroll
-    def "point lookup for changing precision == #precision"() {
+    def "point lookup for given precision == #precision"() {
         given:
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.precision = precision
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         HashPoint stored = storage.findByHashAndTime(input, precision).findAny().get()
 
         then:
@@ -84,11 +83,10 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.precision = precision
         storage.save([
                 new HashPoint(geoHashFull: hash1, timestamp: TIME, userId: USER_ID),
                 new HashPoint(geoHashFull: hash2, timestamp: TIME, userId: USER_ID)]
-                .stream())
+                .stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -111,7 +109,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), 8)
         List<HashPoint> stored = storage.findByHashAndTime(input, 8).collect(Collectors.toList())
 
         then:
@@ -147,7 +145,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -164,7 +162,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
 
         then:
         thrown IllegalStateException
@@ -179,7 +177,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point, input].stream())
+        storage.save([point, input].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -196,7 +194,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point, input].stream())
+        storage.save([point, input].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -212,7 +210,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(),precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:

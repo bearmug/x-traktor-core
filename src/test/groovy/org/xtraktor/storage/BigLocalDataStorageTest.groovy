@@ -41,7 +41,7 @@ class BigLocalDataStorageTest extends Specification {
     @Unroll
     def "point saved with full timestamp and precision == #precision"() {
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         HashPoint stored = storage.findByHashAndTime(input, precision).findAny().get()
 
         then:
@@ -59,7 +59,7 @@ class BigLocalDataStorageTest extends Specification {
     @Unroll
     def "point lookup failed for changed precision == #precision"() {
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision + 1)
         Optional<HashPoint> stored = storage.findByHashAndTime(input, precision).findAny()
 
         then:
@@ -74,10 +74,9 @@ class BigLocalDataStorageTest extends Specification {
     }
 
     @Unroll
-    def "point lookup for changing precision == #precision"() {
+    def "point lookup for given precision == #precision"() {
         when:
-        storage.precision = precision
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         HashPoint stored = storage.findByHashAndTime(input, precision).findAny().get()
 
         then:
@@ -98,11 +97,10 @@ class BigLocalDataStorageTest extends Specification {
 
     def "points couple saved to the same buckets due to limited geohash precision"() {
         when:
-        storage.precision = precision
         storage.save([
                 new HashPoint(hash1, 0, 0, TIME, USER_ID),
                 new HashPoint(hash2, 0, 0, TIME, USER_ID)]
-                .stream())
+                .stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -122,7 +120,7 @@ class BigLocalDataStorageTest extends Specification {
 
     def "same point stored once"() {
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), 8)
         List<HashPoint> stored = storage.findByHashAndTime(input, 8).collect(Collectors.toList())
 
         then:
@@ -152,7 +150,7 @@ class BigLocalDataStorageTest extends Specification {
 
     def "no points found for invalid input"() {
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -166,7 +164,7 @@ class BigLocalDataStorageTest extends Specification {
 
     def "point with null geohash can not be stored"() {
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
 
         then:
         thrown IllegalStateException
@@ -178,7 +176,7 @@ class BigLocalDataStorageTest extends Specification {
 
     def "search result does not contains point itself"() {
         when:
-        storage.save([point, input].stream())
+        storage.save([point, input].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -192,7 +190,7 @@ class BigLocalDataStorageTest extends Specification {
 
     def "search result does not contains points for the same user"() {
         when:
-        storage.save([point, input].stream())
+        storage.save([point, input].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -205,7 +203,7 @@ class BigLocalDataStorageTest extends Specification {
 
     def "clear() removes everything from storage"() {
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:

@@ -2,7 +2,6 @@ package org.xtraktor.storage;
 
 import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
-import org.xtraktor.location.LocationConfig;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -13,18 +12,16 @@ public class BigLocalDataStorage implements DataStorage {
     private final StorageUtility utility = new StorageUtility();
     private final JedisPool pool;
 
-    int precision = LocationConfig.PRECISION;
-
     public BigLocalDataStorage(String host, int port) {
         this.pool = new JedisPool(host, port);
     }
 
     @Override
-    public boolean save(Stream<HashPoint> points) {
+    public boolean save(Stream<HashPoint> points, int hashPrecision) {
 
         try (Jedis jedis = pool.getResource()) {
             points.forEach(p -> {
-                jedis.rpush(utility.getKey(p, precision), utility.serialize(p));
+                jedis.rpush(utility.getKey(p, hashPrecision), utility.serialize(p));
             });
         }
         return true;

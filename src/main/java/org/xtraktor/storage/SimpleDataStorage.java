@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
-import org.xtraktor.location.LocationConfig;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,15 +14,13 @@ public class SimpleDataStorage implements DataStorage {
 
     private final Map<Long, Multimap<String, HashPoint>> map = new ConcurrentHashMap<>();
 
-    private int precision = LocationConfig.PRECISION;
-
     @Override
-    public boolean save(Stream<HashPoint> points) {
+    public boolean save(Stream<HashPoint> points, int hashPrecision) {
 
         points.parallel()
                 .forEach(p -> {
                     Multimap<String, HashPoint> nestedMap = getByTimestamp(p.getTimestamp());
-                    nestedMap.put(p.getHash(precision), p);
+                    nestedMap.put(p.getHash(hashPrecision), p);
                 });
 
         return true;

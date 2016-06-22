@@ -34,7 +34,7 @@ public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor
                 .flatMap(point -> point.interpolate(config));
 
         if (storage != null) {
-            storage.save(res);
+            storage.save(res, config.getHashPrecision());
         }
 
         return res;

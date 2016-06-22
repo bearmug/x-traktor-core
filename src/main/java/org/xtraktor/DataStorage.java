@@ -6,7 +6,7 @@ public interface DataStorage {
 
     int MAX_HASH_PRECISION = 8;
 
-    boolean save(Stream<HashPoint> points);
+    boolean save(Stream<HashPoint> points, int hashPrecision);
 
     Stream<HashPoint> findByHashAndTime(HashPoint input, int hashPrecision);
 
