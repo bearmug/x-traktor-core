@@ -16,7 +16,7 @@ sourceSets {
 
     test {
         java.srcDirs = []
-        groovy.srcDirs += ['src/test/java']
+        groovy.srcDirs = ['src/test-commit/groovy', 'src/test-commit/java']
     }
 
     jmh {
