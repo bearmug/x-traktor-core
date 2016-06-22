@@ -33,6 +33,13 @@ public class BigLocalDataStorage implements DataStorage {
     public Stream<HashPoint> findByHashAndTime(HashPoint input, int hashPrecision) {
         return jedis.lrange(utility.getKey(input, hashPrecision), 0, -1)
                 .parallelStream()
-                .map(utility::deserialize);
+                .map(utility::deserialize)
+                .filter(p ->
+                        p != input && p.getUserId() != input.getUserId());
+    }
+
+    @Override
+    public void clear() {
+        jedis.flushAll();
     }
 }

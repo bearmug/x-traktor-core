@@ -55,4 +55,9 @@ public class SimpleDataStorage implements DataStorage {
                 .filter(p ->
                         p != input && p.getUserId() != input.getUserId());
     }
+
+    @Override
+    public void clear() {
+        map.clear();
+    }
 }
