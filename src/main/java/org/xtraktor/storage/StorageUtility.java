@@ -7,7 +7,7 @@ import org.xtraktor.HashPoint;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-class StorageUtility {
+public class StorageUtility {
 
     private final ObjectMapper mapper = new ObjectMapper();
 

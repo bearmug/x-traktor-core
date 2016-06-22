@@ -30,6 +30,9 @@ public class CrossTracker {
     }
 
     /**
+     * Create component, backed by Redis infra. See Redis storage test suite
+     * for Redis quickstart sample, keyword "RedisServer"
+     *
      * @param config configuration to obtain instance
      * @param host   Redis host
      * @param port   Redis port
