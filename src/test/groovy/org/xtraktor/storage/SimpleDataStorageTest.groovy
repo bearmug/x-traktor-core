@@ -206,4 +206,28 @@ class SimpleDataStorageTest extends Specification {
         point                                            | input                                            | precision
         new HashPoint('1234567891', 1, 1, TIME, USER_ID) | new HashPoint('1234567890', 0, 0, TIME, USER_ID) | 8
     }
+
+    def "clear() removes everything from storage"() {
+        given:
+        DataStorage storage = new SimpleDataStorage();
+
+        when:
+        storage.save([point].stream())
+        List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
+
+        then:
+        stored.size() == 1
+        stored[0] == point
+
+        when:
+        storage.clear()
+        stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
+
+        then:
+        stored.isEmpty()
+
+        where:
+        point                                            | input                                                | precision
+        new HashPoint('1234567890', 0, 0, TIME, USER_ID) | new HashPoint('1234567890', 0, 0, TIME, USER_ID - 1) | 8
+    }
 }
