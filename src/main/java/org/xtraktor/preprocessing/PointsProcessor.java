@@ -1,13 +1,14 @@
 package org.xtraktor.preprocessing;
 
-import org.xtraktor.HashPoint;
 import org.xtraktor.RawPoint;
-import org.xtraktor.location.LocationConfig;
 
 import java.util.List;
-import java.util.stream.Stream;
 
+/**
+ * Internal API to decouple points processing.
+ */
 interface PointsProcessor {
     List<RawPoint> pair(List<RawPoint> input);
+
     List<RawPoint> sort(List<RawPoint> input);
 }
