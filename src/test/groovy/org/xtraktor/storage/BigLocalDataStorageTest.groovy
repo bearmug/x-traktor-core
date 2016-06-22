@@ -1,7 +1,6 @@
 package org.xtraktor.storage
 
 import groovy.util.logging.Slf4j
-import org.xtraktor.DataStorage
 import org.xtraktor.HashPoint
 import redis.embedded.RedisServer
 import spock.lang.Shared
