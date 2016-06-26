@@ -38,8 +38,25 @@ class LoadDataCsvTest extends Specification {
         thrown NumberFormatException
 
         where:
-        file          | precision
+        file            | precision
         'invalid-1.csv' | 6
         'invalid-2.csv' | 6
+    }
+
+    def "exception interrupts input processing"() {
+        given:
+        LoadData loader = new LoadDataCsv(fileName: RES_LOCATION + file)
+        DataPreprocessor proc = Mock(DataPreprocessor)
+
+        when:
+        loader.load(proc, precision)
+
+        then:
+        1 * proc.normalize(_)
+        thrown NumberFormatException
+
+        where:
+        file            | precision
+        'invalid-3.csv' | 6
     }
 }
