@@ -28,6 +28,5 @@ class LoadDataTest extends Specification {
         where:
         point                                                   | precision
         new HashPoint(geoHashFull: "12345678", timestamp: 1000) | 6
-
     }
 }
