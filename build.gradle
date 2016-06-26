@@ -40,7 +40,6 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.0.rc2'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.0.rc2'
 
-
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'cglib:cglib-nodep:3.2.2'
     testCompile 'com.orange.redis-embedded:embedded-redis:0.6'
