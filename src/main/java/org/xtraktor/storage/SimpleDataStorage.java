@@ -12,28 +12,36 @@ import java.util.stream.Stream;
 
 public class SimpleDataStorage implements DataStorage {
 
-    private final Map<Long, Multimap<String, HashPoint>> map = new ConcurrentHashMap<>();
+    private final Map<Long, Multimap<String, HashPoint>> timeMap =
+            new ConcurrentHashMap<>();
+
+    private final Multimap<Long, HashPoint> userMap =
+            Multimaps.synchronizedSetMultimap(HashMultimap.create());
 
     @Override
     public boolean save(Stream<HashPoint> points, int hashPrecision) {
 
         points.parallel()
                 .forEach(p -> {
-                    Multimap<String, HashPoint> nestedMap = getByTimestamp(p.getTimestamp());
-                    nestedMap.put(p.getHash(hashPrecision), p);
+                    // store by timestamp
+                    Multimap<String, HashPoint> tMap = getByTimestamp(p.getTimestamp());
+                    tMap.put(p.getHash(hashPrecision), p);
+
+                    // store by userId
+                    userMap.put(p.getUserId(), p);
                 });
 
         return true;
     }
 
     private Multimap<String, HashPoint> getByTimestamp(long timestamp) {
-        Multimap<String, HashPoint> bucket = map.get(timestamp);
-        if (bucket == null) synchronized (map) {
-            bucket = map.get(timestamp);
+        Multimap<String, HashPoint> bucket = timeMap.get(timestamp);
+        if (bucket == null) synchronized (timeMap) {
+            bucket = timeMap.get(timestamp);
             if (bucket == null) {
                 bucket = Multimaps.
                         synchronizedSetMultimap(HashMultimap.create());
-                map.put(timestamp, bucket);
+                timeMap.put(timestamp, bucket);
             }
         }
         return bucket;
@@ -42,7 +50,7 @@ public class SimpleDataStorage implements DataStorage {
     @Override
     public Stream<HashPoint> findByHashAndTime(HashPoint input, int hashPrecision) {
 
-        Multimap<String, HashPoint> bucket = map.get(input.getTimestamp());
+        Multimap<String, HashPoint> bucket = timeMap.get(input.getTimestamp());
         if (bucket == null) {
             return Stream.empty();
         }
@@ -55,6 +63,13 @@ public class SimpleDataStorage implements DataStorage {
 
     @Override
     public void clear() {
-        map.clear();
+        timeMap.clear();
+    }
+
+    @Override
+    public Stream<HashPoint> routeForUser(long userId) {
+        return userMap.get(userId)
+                .stream()
+                .sorted((p1, p2) -> Long.compare(p1.getTimestamp(), p2.getTimestamp()));
     }
 }

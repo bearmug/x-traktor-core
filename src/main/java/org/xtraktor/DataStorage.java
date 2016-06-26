@@ -45,4 +45,12 @@ public interface DataStorage {
      * Totally cleanup storage
      */
     void clear();
+
+    /**
+     * Lookup for specific user route
+     *
+     * @param userId user id to lookup route for
+     * @return user route points, sorted naturally by timestamp
+     */
+    Stream<HashPoint> routeForUser(long userId);
 }

@@ -2,8 +2,10 @@ package org.xtraktor.mining
 
 import org.xtraktor.DataStorage
 import org.xtraktor.HashPoint
+import org.xtraktor.location.LocationConfig
 import spock.lang.Specification
 
+import java.util.stream.Collectors
 import java.util.stream.Stream
 
 class SimpleDataMinerTest extends Specification {
@@ -32,5 +34,19 @@ class SimpleDataMinerTest extends Specification {
 
         then:
         res.collect().size() == 3
+    }
+
+    def "matching done by user id"() {
+        given:
+        def storage = Mock(DataStorage)
+        storage.routeForUser(_) >> ([Mock(HashPoint)] * 1).stream()
+        storage.findByHashAndTime(_,_) >> ([Mock(HashPoint)] * 1).asList().stream()
+        SimpleDataMiner miner = new SimpleDataMiner(storage)
+
+        when:
+        List<HashPoint> res = miner.matchForUser(0, 6).collect(Collectors.toList())
+
+        then:
+        res.size() == 1
     }
 }

@@ -34,8 +34,18 @@ public interface DataMiner {
      *
      * @param input         user route, provided by time/location points sequence
      * @param hashPrecision geo precision to use for lookup
-     * @return resulting summary withfull intersection along the route. Sorting
-     * is not guaranteed.
+     * @return resulting summary with full intersection along the route. Sorting
+     * is not guaranteed
      */
     Stream<HashPoint> matchForRoute(List<HashPoint> input, int hashPrecision);
+
+    /**
+     * Lookup for intersections with specific user.
+     *
+     * @param userId        specific userId
+     * @param hashPrecision geo precision to use for lookup
+     * @return resulting summary with full intersection along the route. Sorting
+     * is not guaranteed
+     */
+    Stream<HashPoint> matchForUser(long userId, int hashPrecision);
 }

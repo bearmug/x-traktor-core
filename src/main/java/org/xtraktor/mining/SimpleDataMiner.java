@@ -1,14 +1,11 @@
 package org.xtraktor.mining;
 
 import org.xtraktor.DataMiner;
-import org.xtraktor.HashPoint;
-import org.xtraktor.location.LocationConfig;
 import org.xtraktor.DataStorage;
+import org.xtraktor.HashPoint;
 
 import java.util.List;
 import java.util.stream.Stream;
-
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.collect;
 
 public class SimpleDataMiner implements DataMiner {
 
@@ -29,5 +26,15 @@ public class SimpleDataMiner implements DataMiner {
 
         return input.parallelStream()
                 .flatMap(it -> matchForPoint(it, hashPrecision));
+    }
+
+    @Override
+    public Stream<HashPoint> matchForUser(long userId, int hashPrecision) {
+
+        return storage.routeForUser(userId)
+                .flatMap(p ->
+                        matchForPoint(p, hashPrecision))
+                .sorted((p1, p2) ->
+                        Long.compare(p1.getTimestamp(), p2.getTimestamp()));
     }
 }

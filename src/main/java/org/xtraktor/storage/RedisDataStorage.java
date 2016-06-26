@@ -45,4 +45,9 @@ public class RedisDataStorage implements DataStorage {
             jedis.flushAll();
         }
     }
+
+    @Override
+    public Stream<HashPoint> routeForUser(long userId) {
+        return null;
+    }
 }
