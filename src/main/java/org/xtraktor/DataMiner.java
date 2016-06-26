@@ -48,4 +48,10 @@ public interface DataMiner {
      * is not guaranteed
      */
     Stream<HashPoint> matchForUser(long userId, int hashPrecision);
+
+    /**
+     * Provides access to underlying storage
+     * @return storage
+     */
+    DataStorage getStorage();
 }

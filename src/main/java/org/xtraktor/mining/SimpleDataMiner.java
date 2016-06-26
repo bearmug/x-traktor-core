@@ -37,4 +37,9 @@ public class SimpleDataMiner implements DataMiner {
                 .sorted((p1, p2) ->
                         Long.compare(p1.getTimestamp(), p2.getTimestamp()));
     }
+
+    @Override
+    public DataStorage getStorage() {
+        return storage;
+    }
 }

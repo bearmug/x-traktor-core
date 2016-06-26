@@ -49,4 +49,16 @@ class SimpleDataMinerTest extends Specification {
         then:
         res.size() == 1
     }
+
+    def "simple data storage access provided"() {
+        given:
+        def storage = Mock(DataStorage)
+        SimpleDataMiner miner = new SimpleDataMiner(storage)
+
+        when:
+        DataStorage res = miner.storage
+
+        then:
+        res.is storage
+    }
 }
