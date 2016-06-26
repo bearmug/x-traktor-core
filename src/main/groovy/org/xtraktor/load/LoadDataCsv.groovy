@@ -7,7 +7,7 @@ import org.xtraktor.RawPoint
 import java.nio.file.Paths
 
 /**
- * CSV parser implementation. Performance is suboptimal with type inference
+ * Optional CSV parser implementation. Performance is suboptimal with type inference
  * and per-entry processing approach
  */
 @Canonical
