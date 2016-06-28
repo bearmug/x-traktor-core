@@ -20,31 +20,31 @@ This configuration noticing required precisions and tolerance levels
 around.
 
 ## Basic no-extra-coding usage
-Just create [CrossTracker]() instance and use it`s [DataPreprocessor]() 
-and [DataMiner]() interfaces:
+Just create [CrossTracker](/src/main/java/org/xtraktor/CrossTracker.java) instance and use it`s [DataPreprocessor](/src/main/java/org/xtraktor/DataPreprocessor.java) 
+and [DataMiner](/src/main/java/org/xtraktor/DataMiner.java) interfaces:
 ```java
  CrossTracker tracker = new CrossTracker()
 ```
 
 ### Storage modes
-In general, underlying storage implements [DataStorage]() interface and
+In general, underlying storage implements [DataStorage](/src/main/java/org/xtraktor/DataStorage.java) interface and
 has to built-in implementations:
- * Java embedded storage, actively using [Guava multiset]() approach. Short
+ * Java embedded storage, actively using [Guava multimap](https://google.github.io/guava/releases/19.0/api/docs/com/google/common/collect/Multimap.html) approach. Short
  alt elegant.
- * Storage with plugged [Jedis API]. It is required to connect it to 
- running [Redis]() instance in order to go ahead. This one providing 
+ * Storage with plugged [Jedis API](https://github.com/xetorthio/jedis). It is required to connect it to 
+ running [Redis](http://redis.io/) instance in order to go ahead. This one providing 
  chance to play around with solution scaling without too much effort.
  
 ## API usage
 ### Beans storage
 ### Incoming data pre-processing
 ### Mining and lookup
+
 ## Benchmarks
-I do love benchmarks generation. And benchmark outputs is the most 
-exciting part for this kind of activity.
+Frankly, most exciting experience across all the project
 
 ### JMH microbenchmarks
-[JMH]() toolkit used to prove concepts and monitor performance for 
+[JMH](http://openjdk.java.net/projects/code-tools/jmh/) toolkit used to prove concepts and monitor performance for 
 segregated classes and components. Please explore gradle 'Jmh' tasks
 group for featured cases:
 ```
@@ -52,13 +52,13 @@ gradle tasks
 ```
 These gradle tasks named according to template 'bench<WhichAspectMeasured>'.
 For example:
-'''
+```
 gradle benchGroovyJava
-'''
+```
 
 ### Load integrational testing
 Here should be short and intuitive demo for system opportunities. 
-[Gatling]() toolkit and relevant Gradle plugin assumed for usage here.
+[Gatling](https://github.com/gatling/gatling) toolkit and relevant Gradle plugin assumed for usage here.
 Main KPIs to discover here:
  * Single node saturation metrics
  * Max throughput for single node

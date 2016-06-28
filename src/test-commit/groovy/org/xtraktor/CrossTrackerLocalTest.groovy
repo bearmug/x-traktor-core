@@ -1,6 +1,7 @@
 package org.xtraktor
 
 import org.xtraktor.location.LocationConfig
+import org.xtraktor.storage.SimpleDataStorage
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -19,7 +20,7 @@ class CrossTrackerLocalTest extends Specification {
     CrossTracker tracker
 
     def setup() {
-        tracker = CrossTracker.withLocal(config)
+        tracker = CrossTracker.create(config, new SimpleDataStorage())
     }
 
     @Unroll

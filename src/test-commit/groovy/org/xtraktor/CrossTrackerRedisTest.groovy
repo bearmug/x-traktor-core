@@ -1,6 +1,7 @@
 package org.xtraktor
 
 import org.xtraktor.location.LocationConfig
+import org.xtraktor.storage.RedisDataStorage
 import org.xtraktor.storage.StorageUtility
 import redis.embedded.RedisServer
 import spock.lang.Shared
@@ -27,7 +28,7 @@ class CrossTrackerRedisTest extends Specification {
         redisServer = new RedisServer(port)
         redisServer.start()
 
-        tracker = CrossTracker.withRedis(config, 'localhost', port)
+        tracker = CrossTracker.create(config, new RedisDataStorage('localhost', port))
     }
 
     def cleanupSpec() {

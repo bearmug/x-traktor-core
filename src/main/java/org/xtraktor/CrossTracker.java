@@ -20,27 +20,14 @@ public class CrossTracker {
     }
 
     /**
-     * Create component, backed by local storage
+     * Create component, backed by preferred storage
      *
      * @param config configuration to obtain instance
+     * @param storage storage implementation to use
      * @return instance ready to work
      */
-    public static CrossTracker withLocal(LocationConfig config) {
-        return new CrossTracker(config, new SimpleDataStorage());
-    }
-
-    /**
-     * Create component, backed by Redis infra. See Redis storage test suite
-     * for Redis quickstart sample, keyword "RedisServer"
-     *
-     * @param config configuration to obtain instance
-     * @param host   Redis host
-     * @param port   Redis port
-     * @return instance ready to work
-     */
-    public static CrossTracker withRedis(LocationConfig config,
-                                         String host, int port) {
-        return new CrossTracker(config, new RedisDataStorage(host, port));
+    public static CrossTracker create(LocationConfig config, DataStorage storage) {
+        return new CrossTracker(config, storage);
     }
 
     /**
