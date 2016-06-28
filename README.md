@@ -23,7 +23,11 @@ around.
 Just create [CrossTracker](/src/main/java/org/xtraktor/CrossTracker.java) instance and use it`s [DataPreprocessor](/src/main/java/org/xtraktor/DataPreprocessor.java) 
 and [DataMiner](/src/main/java/org/xtraktor/DataMiner.java) interfaces:
 ```java
- CrossTracker tracker = new CrossTracker()
+ // plain embedded storage -backed instance
+ CrossTracker tracker = CrossTracker.create(config, new SimpleDataStorage())
+ 
+ // Redis-based instance creation
+ CrossTracker.create(config, new RedisDataStorage('localhost', port))
 ```
 
 ### Storage modes
