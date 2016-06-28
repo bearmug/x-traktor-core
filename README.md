@@ -20,7 +20,7 @@ This configuration noticing required precisions and tolerance levels
 around.
 
 ## Basic no-extra-coding usage
-Just create [CrossTracker](/src/main/java/org/xtraktor/CrossTracker.java) instance and use it`s [DataPreprocessor](/src/main/java/org/xtraktor/DataPreprocessor.java) 
+Just create [CrossTracker](/src/main/groovy/org/xtraktor/CrossTracker.groovy) instance and use it`s [DataPreprocessor](/src/main/java/org/xtraktor/DataPreprocessor.java) 
 and [DataMiner](/src/main/java/org/xtraktor/DataMiner.java) interfaces:
 ```java
  CrossTracker tracker = CrossTracker.create(config, dataStorage)
