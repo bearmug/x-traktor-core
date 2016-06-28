@@ -42,9 +42,20 @@ has to built-in implementations:
 ```
  
 ## API usage
+System is open for extensions over provided interfaces
 ### Beans storage
-### Incoming data pre-processing
-### Mining and lookup
+Custom persistence could be provided over [DataStorage](/src/main/java/org/xtraktor/DataStorage.java) interface 
+implementation to plug it into [CrossTracker](/src/main/groovy/org/xtraktor/CrossTracker.groovy):
+```java
+    dataStorage = new DataStorage() {
+        // custom implememtation
+    }
+```
+
+### Incoming data pre-processing and mining
+[DataPreprocessor](/src/main/java/org/xtraktor/DataPreprocessor.java) and [DataMiner](/src/main/java/org/xtraktor/DataMiner.java) interfaces
+could be re-implemented for related functional changes. But since it is
+mostly system core, it is recommended to amend existing ones instead.
 
 ## Benchmarks
 Frankly, most exciting experience across all the project
