@@ -23,11 +23,7 @@ around.
 Just create [CrossTracker](/src/main/java/org/xtraktor/CrossTracker.java) instance and use it`s [DataPreprocessor](/src/main/java/org/xtraktor/DataPreprocessor.java) 
 and [DataMiner](/src/main/java/org/xtraktor/DataMiner.java) interfaces:
 ```java
- // plain embedded storage -backed instance
- CrossTracker tracker = CrossTracker.create(config, new SimpleDataStorage())
- 
- // Redis-based instance creation
- CrossTracker.create(config, new RedisDataStorage('localhost', port))
+ CrossTracker tracker = CrossTracker.create(config, dataStorage)
 ```
 
 ### Storage modes
@@ -35,9 +31,15 @@ In general, underlying storage implements [DataStorage](/src/main/java/org/xtrak
 has to built-in implementations:
  * Java embedded storage, actively using [Guava multimap](https://google.github.io/guava/releases/19.0/api/docs/com/google/common/collect/Multimap.html) approach. Short
  alt elegant.
+```java
+  dataStorage = new SimpleDataStorage())
+```
  * Storage with plugged [Jedis API](https://github.com/xetorthio/jedis). It is required to connect it to 
  running [Redis](http://redis.io/) instance in order to go ahead. This one providing 
  chance to play around with solution scaling without too much effort.
+```java
+  dataStorage = new RedisDataStorage('localhost', port))
+```
  
 ## API usage
 ### Beans storage

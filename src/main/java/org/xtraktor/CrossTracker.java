@@ -3,13 +3,14 @@ package org.xtraktor;
 import org.xtraktor.location.LocationConfig;
 import org.xtraktor.mining.SimpleDataMiner;
 import org.xtraktor.preprocessing.SimpleDataPreprocessor;
-import org.xtraktor.storage.RedisDataStorage;
-import org.xtraktor.storage.SimpleDataStorage;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Use this class as an entry point for library simplified use-cases
  */
-public class CrossTracker {
+public class CrossTracker implements DataPreprocessor, DataMiner {
 
     private final DataPreprocessor preprocessor;
     private final DataMiner miner;
@@ -22,7 +23,7 @@ public class CrossTracker {
     /**
      * Create component, backed by preferred storage
      *
-     * @param config configuration to obtain instance
+     * @param config  configuration to obtain instance
      * @param storage storage implementation to use
      * @return instance ready to work
      */
@@ -30,17 +31,23 @@ public class CrossTracker {
         return new CrossTracker(config, storage);
     }
 
-    /**
-     * @return {@link DataPreprocessor} to prepare raw data for analysis
-     */
-    public DataPreprocessor getPreprocessor() {
-        return preprocessor;
+    @Override
+    public Stream<HashPoint> matchForPoint(HashPoint input, int hashPrecision) {
+        return miner.matchForPoint(input, hashPrecision);
     }
 
-    /**
-     * @return {@link DataMiner} to manipulate and lookup data
-     */
-    public DataMiner getMiner() {
-        return miner;
+    @Override
+    public Stream<HashPoint> matchForRoute(List<HashPoint> input, int hashPrecision) {
+        return miner.matchForRoute(input, hashPrecision);
+    }
+
+    @Override
+    public Stream<HashPoint> matchForUser(long userId, int hashPrecision) {
+        return miner.matchForUser(userId, hashPrecision);
+    }
+
+    @Override
+    public Stream<HashPoint> normalize(List<RawPoint> input) {
+        return preprocessor.normalize(input);
     }
 }
