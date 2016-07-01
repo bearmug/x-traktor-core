@@ -61,7 +61,7 @@ class LoadDataJdbc implements LoadData {
                 ))
             }
             log.debug "Loaded raw entries for userId: $userId, total entries number: $res.size"
-            proc.normalize res
+            proc.normalize(res, precision)
         }
     }
 }

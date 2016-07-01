@@ -4,6 +4,8 @@ import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
 
 import java.util.stream.Stream;
 
@@ -20,7 +22,7 @@ public class RedisDataStorage implements DataStorage {
     public boolean save(Stream<HashPoint> points, int hashPrecision) {
 
         try (Jedis jedis = pool.getResource()) {
-            points.forEach(p -> {
+            points.sequential().forEach(p -> {
                 jedis.rpush(utility.getKey(p, hashPrecision), utility.serialize(p));
             });
         }

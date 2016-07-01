@@ -13,8 +13,9 @@ class CrossTrackerRedisTest extends Specification {
     LocationConfig config = new LocationConfig(
             timeMin: 0,
             tolerance: 1.0,
-            timeDelta: 1000,
-            hashPrecision: 6)
+            timeDelta: 1000)
+
+    private int HASH_PRECISION = 6
 
 
     @Shared
@@ -50,17 +51,17 @@ class CrossTrackerRedisTest extends Specification {
                 nextPoint: nextPoint)
 
         when:
-        tracker.preprocessor.normalize([point, nextPoint])
+        tracker.preprocessor.normalize([point, nextPoint], HASH_PRECISION)
         Optional<HashPoint> res = tracker.miner.matchForPoint(
                 new HashPoint(
                         geoHashFull: "v05cdhehktqw",
                         timestamp: 1000,
                         userId: point.userId + 1
-                ), config.hashPrecision).findAny()
+                ), HASH_PRECISION).findAny()
 
         then:
         res.isPresent()
-        res.get().getHash(config.hashPrecision) == hash.take(config.hashPrecision)
+        res.get().getHash(HASH_PRECISION) == hash.take(HASH_PRECISION)
 
         where:
         mode                     | lon     | lat     | time | nextLon | nextLat | nextTime | hash

@@ -26,7 +26,6 @@ public class SimpleDataStorage implements DataStorage {
     @Override
     public boolean save(Stream<HashPoint> points, int hashPrecision) {
 
-        final AtomicInteger counter = new AtomicInteger();
         log.trace("Points stream: {} to be saved with precision: {}", points, hashPrecision);
         points.parallel()
                 .forEach(p -> {
@@ -36,7 +35,6 @@ public class SimpleDataStorage implements DataStorage {
 
                     // store by userId
                     userMap.put(p.getUserId(), p);
-                    log.trace("Counter {}", counter.incrementAndGet());
                 });
 
         log.debug("Points stream: {} saved with precision: {}", points, hashPrecision);

@@ -1,5 +1,7 @@
 package org.xtraktor.mining;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtraktor.DataMiner;
 import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
@@ -9,6 +11,7 @@ import java.util.stream.Stream;
 
 public class SimpleDataMiner implements DataMiner {
 
+    private final Logger log = LoggerFactory.getLogger(SimpleDataMiner.class);
     private final DataStorage storage;
 
     public SimpleDataMiner(DataStorage storage) {
@@ -17,6 +20,8 @@ public class SimpleDataMiner implements DataMiner {
 
     @Override
     public Stream<HashPoint> matchForPoint(HashPoint input, int hashPrecision) {
+        log.debug("Lookup for matching around point: {} with precision: {}",
+                input, hashPrecision);
         return storage.findByHashAndTime(input,
                 Math.min(DataStorage.MAX_HASH_PRECISION, hashPrecision));
     }

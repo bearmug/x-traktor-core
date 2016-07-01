@@ -18,7 +18,7 @@ class LoadDataCsvTest extends Specification {
         loader.load(proc, precision)
 
         then:
-        2 * proc.normalize(_)
+        2 * proc.normalize(_,_)
 
         where:
         file          | precision
@@ -52,7 +52,7 @@ class LoadDataCsvTest extends Specification {
         loader.load(proc, precision)
 
         then:
-        1 * proc.normalize(_)
+        1 * proc.normalize(_,_)
         thrown NumberFormatException
 
         where:

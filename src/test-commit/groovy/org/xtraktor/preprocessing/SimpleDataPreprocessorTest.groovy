@@ -62,7 +62,7 @@ class SimpleDataPreprocessorTest extends Specification {
 
         when:
         Stream<HashPoint> out = new SimpleDataPreprocessor(
-                new LocationConfig(timeMin: 0)).normalize([point] * 10)
+                new LocationConfig(timeMin: 0)).normalize([point] * 10, 8)
 
         then:
         out.collect().empty
@@ -88,7 +88,7 @@ class SimpleDataPreprocessorTest extends Specification {
 
         when:
         List<HashPoint> res = new SimpleDataPreprocessor(config)
-                .normalize([point, nextPoint])
+                .normalize([point, nextPoint], 8)
                 .collect(Collectors.toList())
 
         then:

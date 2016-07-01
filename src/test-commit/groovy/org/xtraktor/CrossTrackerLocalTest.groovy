@@ -12,12 +12,13 @@ class CrossTrackerLocalTest extends Specification {
     LocationConfig config = new LocationConfig(
             timeMin: 0,
             tolerance: 1.0,
-            timeDelta: 1000,
-            hashPrecision: 6)
+            timeDelta: 1000)
 
 
     @Shared
     CrossTracker tracker
+
+    int PRECISION = 6
 
     def setup() {
         tracker = CrossTracker.create(config, new SimpleDataStorage())
@@ -38,17 +39,17 @@ class CrossTrackerLocalTest extends Specification {
                 nextPoint: nextPoint)
 
         when:
-        tracker.preprocessor.normalize([point, nextPoint])
+        tracker.preprocessor.normalize([point, nextPoint], PRECISION)
         Optional<HashPoint> res = tracker.miner.matchForPoint(
                 new HashPoint(
                         geoHashFull: "v05cdhehktqw",
                         timestamp: 1000,
                         userId: point.userId + 1
-                ), config.hashPrecision).findAny()
+                ), PRECISION).findAny()
 
         then:
         res.isPresent()
-        res.get().getHash(config.hashPrecision) == hash.take(config.hashPrecision)
+        res.get().getHash(PRECISION) == hash.take(PRECISION)
 
         where:
         mode                     | lon     | lat     | time | nextLon | nextLat | nextTime | hash

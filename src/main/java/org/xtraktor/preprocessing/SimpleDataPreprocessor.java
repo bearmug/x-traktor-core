@@ -30,7 +30,7 @@ public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor
     }
 
     @Override
-    public Stream<HashPoint> normalize(List<RawPoint> input) {
+    public Stream<HashPoint> normalize(List<RawPoint> input, int hashPrecision) {
 
         log.trace("Filtering and sorting input size: {}", input.size());
         Stream<HashPoint> res = pair(sort(input))
@@ -40,7 +40,7 @@ public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor
         log.debug("Filter and sort done for input size: {}", input.size());
 
         if (storage != null) {
-            storage.save(res, config.getHashPrecision());
+            storage.save(res, hashPrecision);
         }
 
         return res;

@@ -26,9 +26,10 @@ public interface DataPreprocessor {
      * </li>
      * </ul>
      *
-     * @param input {@link RawPoint} incoming route for specific user. Pease be
-     *              sure that same userId for each element there
+     * @param input         {@link RawPoint} incoming route for specific user. Pease be
+     *                      sure that same userId for each element there
+     * @param hashPrecision geo hash precision to use
      * @return stream with {@link HashPoint}s built for incoming route
      */
-    Stream<HashPoint> normalize(List<RawPoint> input);
+    Stream<HashPoint> normalize(List<RawPoint> input, int hashPrecision);
 }

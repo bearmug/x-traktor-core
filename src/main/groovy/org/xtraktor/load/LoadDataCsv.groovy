@@ -30,7 +30,7 @@ class LoadDataCsv implements LoadData {
                     longitude: lon as Double,
                     latitude: lat as Double,
                     timestamp: time as Long,
-                    userId: id as Long)])
+                    userId: id as Long)], precision)
         }
     }
 }

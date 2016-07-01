@@ -3,7 +3,6 @@ package org.xtraktor.mining
 import org.xtraktor.CrossTracker
 import org.xtraktor.load.LoadDataJdbc
 import org.xtraktor.location.LocationConfig
-import org.xtraktor.storage.RedisDataStorage
 import org.xtraktor.storage.SimpleDataStorage
 import org.xtraktor.storage.StorageUtility
 import redis.embedded.RedisServer
@@ -17,8 +16,7 @@ class LoadDataJdbcTest extends Specification {
     LocationConfig config = new LocationConfig(
             timeMin: 0,
             tolerance: 1.0,
-            timeDelta: 1000,
-            hashPrecision: 6)
+            timeDelta: 1000)
 
 
     @Shared
@@ -27,6 +25,11 @@ class LoadDataJdbcTest extends Specification {
     @Shared
     RedisServer redisServer
 
+    @Shared
+    LoadDataJdbc loader
+
+    private static final int HASH_PRECISION = 4
+
     def setupSpec() {
         int port = new StorageUtility().freePort
         redisServer = new RedisServer(port)
@@ -34,6 +37,14 @@ class LoadDataJdbcTest extends Specification {
 
 //        tracker = CrossTracker.create(config, new RedisDataStorage('localhost', port))
         tracker = CrossTracker.create(config, new SimpleDataStorage())
+
+        loader = new LoadDataJdbc(
+                connection: 'localhost:3306/mirami',
+                username: 'usr',
+                pw: 'password'
+        )
+
+        loader.load(tracker, HASH_PRECISION)
     }
 
     def cleanupSpec() {
@@ -42,17 +53,43 @@ class LoadDataJdbcTest extends Specification {
 
     @Ignore
     def "test"() {
-        given:
-        LoadDataJdbc loader = new LoadDataJdbc(
-                connection: 'localhost:3306/mirami',
-                username: 'usr',
-                pw: 'password'
-        )
+        when:
+        int count = tracker.matchForUser(userId, HASH_PRECISION).count()
+        then:
+        count == 0
 
-        loader.load(tracker, 6)
-
-        expect:
-        1 == 1
+        where:
+        userId | _
+        386    | _
+        849    | _
+        1001   | _
+        558    | _
+        681    | _
+        96     | _
+        606    | _
+        421    | _
+        453    | _
+        1094   | _
+        1096   | _
+        201    | _
+        320    | _
+        433    | _
+        493    | _
+        402    | _
+        369    | _
+        628    | _
+        658    | _
+        574    | _
+        626    | _
+        1066   | _
+        87     | _
+        544    | _
+        461    | _
+        99     | _
+        3      | _
+        452    | _
+        680    | _
+        5      | _
     }
 
 }
