@@ -1,16 +1,17 @@
 package org.xtraktor.mining
 
 import org.xtraktor.CrossTracker
-import org.xtraktor.load.LoadDataSql
+import org.xtraktor.load.LoadDataJdbc
 import org.xtraktor.location.LocationConfig
 import org.xtraktor.storage.RedisDataStorage
+import org.xtraktor.storage.SimpleDataStorage
 import org.xtraktor.storage.StorageUtility
 import redis.embedded.RedisServer
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
-class LoadDataSqlTest extends Specification {
+class LoadDataJdbcTest extends Specification {
 
     @Shared
     LocationConfig config = new LocationConfig(
@@ -31,7 +32,8 @@ class LoadDataSqlTest extends Specification {
         redisServer = new RedisServer(port)
         redisServer.start()
 
-        tracker = CrossTracker.create(config, new RedisDataStorage('localhost', port))
+//        tracker = CrossTracker.create(config, new RedisDataStorage('localhost', port))
+        tracker = CrossTracker.create(config, new SimpleDataStorage())
     }
 
     def cleanupSpec() {
@@ -41,8 +43,8 @@ class LoadDataSqlTest extends Specification {
     @Ignore
     def "test"() {
         given:
-        LoadDataSql loader = new LoadDataSql(
-                connString: 'localhost:3306/mirami',
+        LoadDataJdbc loader = new LoadDataJdbc(
+                connection: 'localhost:3306/mirami',
                 username: 'usr',
                 pw: 'password'
         )

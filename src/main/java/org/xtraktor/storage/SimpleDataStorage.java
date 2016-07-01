@@ -3,14 +3,19 @@ package org.xtraktor.storage;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class SimpleDataStorage implements DataStorage {
+
+    private final Logger log = LoggerFactory.getLogger(SimpleDataStorage.class);
 
     private final Map<Long, Multimap<String, HashPoint>> timeMap =
             new ConcurrentHashMap<>();
@@ -21,6 +26,8 @@ public class SimpleDataStorage implements DataStorage {
     @Override
     public boolean save(Stream<HashPoint> points, int hashPrecision) {
 
+        final AtomicInteger counter = new AtomicInteger();
+        log.trace("Points stream: {} to be saved with precision: {}", points, hashPrecision);
         points.parallel()
                 .forEach(p -> {
                     // store by timestamp
@@ -29,8 +36,10 @@ public class SimpleDataStorage implements DataStorage {
 
                     // store by userId
                     userMap.put(p.getUserId(), p);
+                    log.trace("Counter {}", counter.incrementAndGet());
                 });
 
+        log.debug("Points stream: {} saved with precision: {}", points, hashPrecision);
         return true;
     }
 
