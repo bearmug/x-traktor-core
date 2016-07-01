@@ -11,6 +11,9 @@ class LocationConfig {
     //precision for longitude/latitude usage and rounding
     public static int PRECISION = 8
 
+    //maximum points to produce between two source points
+    public static int MAX_INTERPOLATION_INTERVALS = 10
+
     //tolerance to filter false RawPoint locations
     double tolerance = 1.0
 

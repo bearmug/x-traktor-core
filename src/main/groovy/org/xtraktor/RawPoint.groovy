@@ -37,6 +37,7 @@ class RawPoint {
     boolean isValid(LocationConfig config) {
         timestamp >= config.timeMin &&
                 nextPoint?.timestamp > timestamp &&
+                (nextPoint?.timestamp - timestamp) / config.timeDelta < config.MAX_INTERPOLATION_INTERVALS &&
                 DoubleMath.fuzzyEquals(longitude, nextPoint.longitude, config.tolerance) &&
                 DoubleMath.fuzzyEquals(latitude, nextPoint.latitude, config.tolerance)
 
