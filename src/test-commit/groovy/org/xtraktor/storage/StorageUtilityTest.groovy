@@ -11,7 +11,7 @@ class StorageUtilityTest extends Specification {
         StorageUtility utility = new StorageUtility()
 
         when:
-        String key = utility.getKey(point, precision)
+        String key = utility.getLocationKey(point, precision)
 
         then:
         key == expectedKey

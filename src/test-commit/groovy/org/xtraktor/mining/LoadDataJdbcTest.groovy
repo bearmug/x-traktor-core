@@ -3,13 +3,15 @@ package org.xtraktor.mining
 import org.xtraktor.CrossTracker
 import org.xtraktor.load.LoadDataJdbc
 import org.xtraktor.location.LocationConfig
+import org.xtraktor.storage.RedisDataStorage
 import org.xtraktor.storage.SimpleDataStorage
 import org.xtraktor.storage.StorageUtility
 import redis.embedded.RedisServer
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
 
+//@Ignore
 class LoadDataJdbcTest extends Specification {
 
     @Shared
@@ -20,76 +22,80 @@ class LoadDataJdbcTest extends Specification {
 
 
     @Shared
-    CrossTracker tracker
+    CrossTracker redisTracker
+
+    @Shared
+    CrossTracker simpleTracker
 
     @Shared
     RedisServer redisServer
 
-    @Shared
-    LoadDataJdbc loader
-
-    private static final int HASH_PRECISION = 4
+    private static final int HASH_PRECISION = 8
 
     def setupSpec() {
         int port = new StorageUtility().freePort
         redisServer = new RedisServer(port)
         redisServer.start()
 
-//        tracker = CrossTracker.create(config, new RedisDataStorage('localhost', port))
-        tracker = CrossTracker.create(config, new SimpleDataStorage())
+        simpleTracker = CrossTracker.create(config, new SimpleDataStorage())
+        redisTracker = CrossTracker.create(config, new RedisDataStorage('localhost', port))
 
-        loader = new LoadDataJdbc(
+        LoadDataJdbc loader = new LoadDataJdbc(
                 connection: 'localhost:3306/mirami',
                 username: 'usr',
                 pw: 'password'
         )
 
-        loader.load(tracker, HASH_PRECISION)
+        loader.load(redisTracker, HASH_PRECISION)
+        loader.load(simpleTracker, HASH_PRECISION)
     }
 
     def cleanupSpec() {
         redisServer.stop()
     }
 
-    @Ignore
-    def "test"() {
+    @Unroll
+    def "for user #userId intersections number is #redisExpect/#simpleExpect"() {
         when:
-        int count = tracker.matchForUser(userId, HASH_PRECISION).count()
+        int redisCount = redisTracker.matchForUser(userId, HASH_PRECISION).count()
+        int simpleCount = simpleTracker.matchForUser(userId, HASH_PRECISION).count()
+
         then:
-        count == 0
+        redisCount == redisExpect
+        simpleCount == simpleExpect
 
         where:
-        userId | _
-        386    | _
-        849    | _
-        1001   | _
-        558    | _
-        681    | _
-        96     | _
-        606    | _
-        421    | _
-        453    | _
-        1094   | _
-        1096   | _
-        201    | _
-        320    | _
-        433    | _
-        493    | _
-        402    | _
-        369    | _
-        628    | _
-        658    | _
-        574    | _
-        626    | _
-        1066   | _
-        87     | _
-        544    | _
-        461    | _
-        99     | _
-        3      | _
-        452    | _
-        680    | _
-        5      | _
+        userId | redisExpect | simpleExpect
+        386    | 0           | 0
+        849    | 0           | 0
+        1001   | 0           | 0
+        558    | 0           | 0
+        681    | 0           | 0
+        96     | 0           | 0
+        606    | 0           | 0
+        421    | 0           | 0
+        453    | 1916        | 1912
+        1094   | 0           | 0
+        1096   | 0           | 0
+        201    | 2           | 2
+        320    | 0           | 0
+        433    | 0           | 0
+        493    | 0           | 0
+        402    | 0           | 0
+        369    | 14          | 10
+        628    | 0           | 0
+        658    | 0           | 0
+        574    | 0           | 0
+        626    | 0           | 0
+        1066   | 0           | 0
+        87     | 0           | 0
+        544    | 0           | 0
+        461    | 0           | 0
+        99     | 10          | 9
+        3      | 8           | 6
+        452    | 1916        | 1912
+        680    | 0           | 0
+        5      | 0           | 0
     }
 
 }

@@ -27,8 +27,12 @@ public class StorageUtility {
         }
     }
 
-    String getKey(HashPoint point, int precision) {
+    String getLocationKey(HashPoint point, int precision) {
         return point.getHash(precision) + "-" + point.getTimestamp();
+    }
+
+    String getUserKey(long userId) {
+        return "user-" + userId;
     }
 
     public int getFreePort() {

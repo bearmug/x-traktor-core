@@ -4,8 +4,6 @@ import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Protocol;
 
 import java.util.stream.Stream;
 
@@ -23,7 +21,9 @@ public class RedisDataStorage implements DataStorage {
 
         try (Jedis jedis = pool.getResource()) {
             points.sequential().forEach(p -> {
-                jedis.rpush(utility.getKey(p, hashPrecision), utility.serialize(p));
+                String json = utility.serialize(p);
+                jedis.rpush(utility.getLocationKey(p, hashPrecision), json);
+                jedis.rpush(utility.getUserKey(p.getUserId()), json);
             });
         }
         return true;
@@ -32,7 +32,7 @@ public class RedisDataStorage implements DataStorage {
     @Override
     public Stream<HashPoint> findByHashAndTime(HashPoint input, int hashPrecision) {
         try (Jedis jedis = pool.getResource()) {
-            return jedis.lrange(utility.getKey(input, hashPrecision), 0, -1)
+            return jedis.lrange(utility.getLocationKey(input, hashPrecision), 0, -1)
                     .parallelStream()
                     .map(utility::deserialize)
                     .filter(p ->
@@ -50,6 +50,12 @@ public class RedisDataStorage implements DataStorage {
 
     @Override
     public Stream<HashPoint> routeForUser(long userId) {
-        return null;
+        try (Jedis jedis = pool.getResource()) {
+            return jedis.lrange(utility.getUserKey(userId), 0, -1)
+                    .stream()
+                    .map(utility::deserialize)
+                    .sorted((p1, p2) -> Long.compare(p1.getTimestamp(), p2.getTimestamp()));
+        }
     }
 }
+
