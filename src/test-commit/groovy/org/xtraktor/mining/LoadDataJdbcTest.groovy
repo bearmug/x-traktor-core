@@ -7,11 +7,15 @@ import org.xtraktor.storage.RedisDataStorage
 import org.xtraktor.storage.SimpleDataStorage
 import org.xtraktor.storage.StorageUtility
 import redis.embedded.RedisServer
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-//@Ignore
+import java.util.stream.Collectors
+
+//TODO: has to be replaced with runtime database when done
+@Ignore
 class LoadDataJdbcTest extends Specification {
 
     @Shared
@@ -64,38 +68,17 @@ class LoadDataJdbcTest extends Specification {
         redisCount == redisExpect
         simpleCount == simpleExpect
 
+        println "Expect redis: ${redisTracker.matchForUser(userId, HASH_PRECISION).collect(Collectors.toList()).join(', ')}"
+        println "Expect simple: ${simpleTracker.matchForUser(userId, HASH_PRECISION).collect(Collectors.toList()).join(", ")}"
+
         where:
         userId | redisExpect | simpleExpect
-        386    | 0           | 0
-        849    | 0           | 0
-        1001   | 0           | 0
-        558    | 0           | 0
-        681    | 0           | 0
-        96     | 0           | 0
-        606    | 0           | 0
-        421    | 0           | 0
-        453    | 1916        | 1912
-        1094   | 0           | 0
-        1096   | 0           | 0
-        201    | 2           | 2
-        320    | 0           | 0
-        433    | 0           | 0
-        493    | 0           | 0
-        402    | 0           | 0
-        369    | 14          | 10
-        628    | 0           | 0
-        658    | 0           | 0
-        574    | 0           | 0
-        626    | 0           | 0
-        1066   | 0           | 0
-        87     | 0           | 0
-        544    | 0           | 0
-        461    | 0           | 0
-        99     | 10          | 9
+//        453    | 1916        | 1912
+//        201    | 2           | 2
+//        369    | 14          | 10
+//        99     | 10          | 9
         3      | 8           | 6
-        452    | 1916        | 1912
-        680    | 0           | 0
-        5      | 0           | 0
+//        452    | 1916        | 1912
     }
 
 }
