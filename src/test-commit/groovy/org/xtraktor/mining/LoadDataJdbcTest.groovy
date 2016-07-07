@@ -7,7 +7,6 @@ import org.xtraktor.storage.RedisDataStorage
 import org.xtraktor.storage.SimpleDataStorage
 import org.xtraktor.storage.StorageUtility
 import redis.embedded.RedisServer
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -15,7 +14,7 @@ import spock.lang.Unroll
 import java.util.stream.Collectors
 
 //TODO: has to be replaced with runtime database when done
-@Ignore
+//@Ignore
 class LoadDataJdbcTest extends Specification {
 
     @Shared
@@ -73,12 +72,12 @@ class LoadDataJdbcTest extends Specification {
 
         where:
         userId | redisExpect | simpleExpect
-//        453    | 1916        | 1912
-//        201    | 2           | 2
-//        369    | 14          | 10
-//        99     | 10          | 9
-        3      | 8           | 6
-//        452    | 1916        | 1912
+        453    | 1912        | 1912
+        201    | 2           | 2
+        369    | 10          | 10
+        99     | 9           | 9
+        3      | 6           | 6
+        452    | 1912        | 1912
     }
 
 }
