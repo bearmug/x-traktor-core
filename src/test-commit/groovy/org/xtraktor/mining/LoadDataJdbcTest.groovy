@@ -12,6 +12,8 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.nio.file.Paths
+
 //TODO: has to be replaced with runtime database when done
 class LoadDataJdbcTest extends Specification {
 
@@ -41,14 +43,18 @@ class LoadDataJdbcTest extends Specification {
         loadDatabase()
 
         LoadDataJdbc loader = new LoadDataJdbc(
-                connectionString: 'jdbc:mysql://localhost:3306/mirami?serverTimezone=UTC&user=usr&password=password')
+                connectionString: 'jdbc:h2:mem:test')
 
         loader.load(redisTracker, HASH_PRECISION)
         loader.load(simpleTracker, HASH_PRECISION)
     }
 
     private void loadDatabase() {
-        sql = Sql.newInstance("jdbc:h2:mem:", "org.h2.Driver")
+        sql = Sql.newInstance('jdbc:h2:mem:test', 'org.h2.Driver')
+
+        Paths.get('src/test-commit/resources/sql/gps_tracks.sql').text.split(';').each { s ->
+            sql.execute s.replaceAll("\n", ' ')
+        }
     }
 
     private void loadRedis() {
