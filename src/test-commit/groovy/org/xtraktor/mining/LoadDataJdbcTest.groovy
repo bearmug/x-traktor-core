@@ -14,9 +14,10 @@ import spock.lang.Unroll
 
 import java.nio.file.Paths
 
-//TODO: has to be replaced with runtime database when done
 class LoadDataJdbcTest extends Specification {
 
+    public static final String H2_TEST_CONNECTION_STRING = 'jdbc:h2:mem:test'
+    public static final int HASH_PRECISION = 8
     @Shared
     LocationConfig config = new LocationConfig(
             timeMin: 0,
@@ -36,21 +37,19 @@ class LoadDataJdbcTest extends Specification {
     @Shared
     Sql sql
 
-    private static final int HASH_PRECISION = 8
-
     def setupSpec() {
         loadRedis()
         loadDatabase()
 
         LoadDataJdbc loader = new LoadDataJdbc(
-                connectionString: 'jdbc:h2:mem:test')
+                connectionString: H2_TEST_CONNECTION_STRING)
 
         loader.load(redisTracker, HASH_PRECISION)
         loader.load(simpleTracker, HASH_PRECISION)
     }
 
     private void loadDatabase() {
-        sql = Sql.newInstance('jdbc:h2:mem:test', 'org.h2.Driver')
+        sql = Sql.newInstance(H2_TEST_CONNECTION_STRING, 'org.h2.Driver')
 
         Paths.get('src/test-commit/resources/sql/gps_tracks.sql').text.split(';').each { s ->
             sql.execute s.replaceAll("\n", ' ')
@@ -71,7 +70,7 @@ class LoadDataJdbcTest extends Specification {
     }
 
     @Unroll
-    def "for user #userId intersections number is #redisExpect/#simpleExpect"() {
+    def "for user #userId intersections number is #expectCount"() {
         when:
         int redisCount = redisTracker.matchForUser(userId, HASH_PRECISION).count()
         int simpleCount = simpleTracker.matchForUser(userId, HASH_PRECISION).count()
