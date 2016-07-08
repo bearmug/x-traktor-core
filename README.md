@@ -26,6 +26,19 @@ and [DataMiner](/src/main/java/org/xtraktor/DataMiner.java) interfaces:
  CrossTracker tracker = CrossTracker.create(config, dataStorage)
 ```
 
+Quite useful and simple case implemented with H2 real data upload and 
+import. This scenario could be reviwed under [LoadDataJdbcTest](/src/test-commit/groovy/org/xtraktor/mining/LoadDataJdbcTest.groovy) file:
+```groovy
+    LoadDataJdbc loader = new LoadDataJdbc(
+                connectionString: H2_TEST_CONNECTION_STRING)
+
+    loader.load(CrossTracker.create(config, new SimpleDataStorage()), HASH_PRECISION)
+    //OR
+    loader.load(CrossTracker.create(config, new RedisDataStorage('localhost', port)), HASH_PRECISION)
+    ...
+    redisTracker.matchForUser(userId, HASH_PRECISION).each { ... }
+```
+
 ### Storage modes
 In general, underlying storage implements [DataStorage](/src/main/java/org/xtraktor/DataStorage.java) interface and
 has to built-in implementations:
