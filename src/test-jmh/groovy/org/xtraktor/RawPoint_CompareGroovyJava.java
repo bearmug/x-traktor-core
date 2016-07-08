@@ -56,7 +56,7 @@ public class RawPoint_CompareGroovyJava {
 
     @Setup
     public void before() {
-        config = new LocationConfig(1.0, 8, 0, 1000);
+        config = new LocationConfig(1.0, 0, 1000);
 
         RawPoint nextPoint = new RawPoint(
                 longitude + .5, latitude + .5, timestamp + timeDelta, userId);

@@ -74,3 +74,15 @@ task benchPreprocessor(type: JavaExec, group: 'jmh',
     classpath = sourceSets.jmh.runtimeClasspath
     main = 'org.xtraktor.preprocessing.SimpleDataPreprocessorBenchmark'
 }
+
+task benchTrackerSequential(type: JavaExec, group: 'jmh',
+        description: 'bench performance tracker instance running with low to no contention') {
+    classpath = sourceSets.jmh.runtimeClasspath
+    main = 'org.xtraktor.TrackerSequentialBenchmark'
+}
+
+task benchTrackerConcurrent(type: JavaExec, group: 'jmh',
+        description: 'bench performance tracker instance running with qggressive contention levels') {
+    classpath = sourceSets.jmh.runtimeClasspath
+    main = 'org.xtraktor.TrackerSequentialBenchmark'
+}
