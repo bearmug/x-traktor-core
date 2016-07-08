@@ -16,20 +16,12 @@ import java.sql.Statement
 @Canonical
 class LoadDataJdbc implements LoadData {
 
-    private String connection;
-    private String username;
-    private String pw;
+    private String connectionString;
 
     @Override
     void load(DataPreprocessor proc, int precision) {
 
-        Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://$connection?" +
-                        "useUnicode=true&" +
-                        "useJDBCCompliantTimezoneShift=true&" +
-                        "useLegacyDatetimeCode=false&" +
-                        "serverTimezone=UTC&" +
-                        "user=$username&password=$pw")
+        Connection connection = DriverManager.getConnection connectionString
         Statement stmt = connection.createStatement()
 
         // read all users first and put them as stream

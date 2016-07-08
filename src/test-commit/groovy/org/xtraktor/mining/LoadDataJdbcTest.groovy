@@ -1,5 +1,6 @@
 package org.xtraktor.mining
 
+import groovy.sql.Sql
 import org.xtraktor.CrossTracker
 import org.xtraktor.load.LoadDataJdbc
 import org.xtraktor.location.LocationConfig
@@ -11,10 +12,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.util.stream.Collectors
-
 //TODO: has to be replaced with runtime database when done
-//@Ignore
 class LoadDataJdbcTest extends Specification {
 
     @Shared
@@ -33,6 +31,9 @@ class LoadDataJdbcTest extends Specification {
     @Shared
     RedisServer redisServer
 
+    @Shared
+    sql = Sql.newInstance("jdbc:h2:mem:", "org.h2.Driver")
+
     private static final int HASH_PRECISION = 8
 
     def setupSpec() {
@@ -44,10 +45,7 @@ class LoadDataJdbcTest extends Specification {
         redisTracker = CrossTracker.create(config, new RedisDataStorage('localhost', port))
 
         LoadDataJdbc loader = new LoadDataJdbc(
-                connection: 'localhost:3306/mirami',
-                username: 'usr',
-                pw: 'password'
-        )
+                connectionString: 'jdbc:mysql://localhost:3306/mirami?serverTimezone=UTC&user=usr&password=password')
 
         loader.load(redisTracker, HASH_PRECISION)
         loader.load(simpleTracker, HASH_PRECISION)
@@ -64,20 +62,15 @@ class LoadDataJdbcTest extends Specification {
         int simpleCount = simpleTracker.matchForUser(userId, HASH_PRECISION).count()
 
         then:
-        redisCount == redisExpect
-        simpleCount == simpleExpect
-
-        println "Expect redis: ${redisTracker.matchForUser(userId, HASH_PRECISION).collect(Collectors.toList()).join(', ')}"
-        println "Expect simple: ${simpleTracker.matchForUser(userId, HASH_PRECISION).collect(Collectors.toList()).join(", ")}"
+        redisCount == expectCount
+        simpleCount == expectCount
 
         where:
-        userId | redisExpect | simpleExpect
-        453    | 1912        | 1912
-        201    | 2           | 2
-        369    | 10          | 10
-        99     | 9           | 9
-        3      | 6           | 6
-        452    | 1912        | 1912
+        userId | expectCount
+        453    | 1912
+        369    | 2
+        99     | 3
+        3      | 1
+        452    | 1912
     }
-
 }

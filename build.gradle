@@ -50,6 +50,8 @@ dependencies {
     testCompile 'cglib:cglib-nodep:3.2.2'
     testCompile 'com.orange.redis-embedded:embedded-redis:0.6'
 
+    testRuntime 'com.h2database:h2:1.4.182'
+
 
     jmhCompile 'org.openjdk.jmh:jmh-core:1.12'
     jmhCompile 'org.openjdk.jmh:jmh-generator-annprocess:1.12'
