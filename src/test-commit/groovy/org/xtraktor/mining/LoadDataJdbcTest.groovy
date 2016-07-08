@@ -32,23 +32,32 @@ class LoadDataJdbcTest extends Specification {
     RedisServer redisServer
 
     @Shared
-    sql = Sql.newInstance("jdbc:h2:mem:", "org.h2.Driver")
+    Sql sql
 
     private static final int HASH_PRECISION = 8
 
     def setupSpec() {
-        int port = new StorageUtility().freePort
-        redisServer = new RedisServer(port)
-        redisServer.start()
-
-        simpleTracker = CrossTracker.create(config, new SimpleDataStorage())
-        redisTracker = CrossTracker.create(config, new RedisDataStorage('localhost', port))
+        loadRedis()
+        loadDatabase()
 
         LoadDataJdbc loader = new LoadDataJdbc(
                 connectionString: 'jdbc:mysql://localhost:3306/mirami?serverTimezone=UTC&user=usr&password=password')
 
         loader.load(redisTracker, HASH_PRECISION)
         loader.load(simpleTracker, HASH_PRECISION)
+    }
+
+    private void loadDatabase() {
+        sql = Sql.newInstance("jdbc:h2:mem:", "org.h2.Driver")
+    }
+
+    private void loadRedis() {
+        int port = new StorageUtility().freePort
+        redisServer = new RedisServer(port)
+        redisServer.start()
+
+        simpleTracker = CrossTracker.create(config, new SimpleDataStorage())
+        redisTracker = CrossTracker.create(config, new RedisDataStorage('localhost', port))
     }
 
     def cleanupSpec() {
