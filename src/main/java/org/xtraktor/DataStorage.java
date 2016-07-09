@@ -53,4 +53,11 @@ public interface DataStorage<T> {
      * @return user route points, sorted naturally by timestamp
      */
     Stream<T> routeForUser(long userId);
+
+    /**
+     * Convert underling structure to {@link HashPoint} instance
+     * @param input this specific storage operated data type
+     * @return {@link HashPoint} instance
+     */
+    HashPoint toPoint(T input);
 }

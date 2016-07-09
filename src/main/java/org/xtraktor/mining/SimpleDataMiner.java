@@ -9,17 +9,17 @@ import org.xtraktor.HashPoint;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class SimpleDataMiner implements DataMiner {
+public class SimpleDataMiner<T> implements DataMiner<T> {
 
     private final Logger log = LoggerFactory.getLogger(SimpleDataMiner.class);
-    private final DataStorage<HashPoint> storage;
+    private final DataStorage<T> storage;
 
-    public SimpleDataMiner(DataStorage<HashPoint> storage) {
+    public SimpleDataMiner(DataStorage<T> storage) {
         this.storage = storage;
     }
 
     @Override
-    public Stream<HashPoint> matchForPoint(HashPoint input, int hashPrecision) {
+    public Stream<T> matchForPoint(HashPoint input, int hashPrecision) {
         log.debug("Lookup for matching around point: {} with precision: {}",
                 input, hashPrecision);
         return storage.findByHashAndTime(input,
@@ -27,19 +27,17 @@ public class SimpleDataMiner implements DataMiner {
     }
 
     @Override
-    public Stream<HashPoint> matchForRoute(List<HashPoint> input, int hashPrecision) {
+    public Stream<T> matchForRoute(List<HashPoint> input, int hashPrecision) {
 
         return input.parallelStream()
                 .flatMap(it -> matchForPoint(it, hashPrecision));
     }
 
     @Override
-    public Stream<HashPoint> matchForUser(long userId, int hashPrecision) {
+    public Stream<T> matchForUser(long userId, int hashPrecision) {
 
         return storage.routeForUser(userId)
                 .flatMap(p ->
-                        matchForPoint(p, hashPrecision))
-                .sorted((p1, p2) ->
-                        Long.compare(p1.getTimestamp(), p2.getTimestamp()));
+                        matchForPoint(storage.toPoint(p), hashPrecision));
     }
 }

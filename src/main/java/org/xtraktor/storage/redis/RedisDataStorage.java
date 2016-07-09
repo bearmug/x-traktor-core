@@ -22,4 +22,9 @@ public class RedisDataStorage extends RedisStorage<HashPoint> {
     public int sort(HashPoint p1, HashPoint p2) {
         return Long.compare(p1.getTimestamp(), p2.getTimestamp());
     }
+
+    @Override
+    public HashPoint toPoint(HashPoint input) {
+        return input;
+    }
 }

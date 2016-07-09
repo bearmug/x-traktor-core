@@ -78,4 +78,9 @@ public class SimpleDataStorage implements DataStorage<HashPoint> {
                 .stream()
                 .sorted((p1, p2) -> Long.compare(p1.getTimestamp(), p2.getTimestamp()));
     }
+
+    @Override
+    public HashPoint toPoint(HashPoint input) {
+        return input;
+    }
 }

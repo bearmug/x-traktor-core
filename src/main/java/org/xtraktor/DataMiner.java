@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * <p/>
  * Point from the same user are not included
  */
-public interface DataMiner {
+public interface DataMiner<T> {
 
     /**
      * Lookup for intersections with other users for:
@@ -27,7 +27,7 @@ public interface DataMiner {
      * @param hashPrecision geo-precision measurement to lookup
      * @return stream with detected intersections.
      */
-    Stream<HashPoint> matchForPoint(HashPoint input, int hashPrecision);
+    Stream<T> matchForPoint(HashPoint input, int hashPrecision);
 
     /**
      * Lookup for intersections with other users along the chained route
@@ -37,7 +37,7 @@ public interface DataMiner {
      * @return resulting summary with full intersection along the route. Sorting
      * is not guaranteed
      */
-    Stream<HashPoint> matchForRoute(List<HashPoint> input, int hashPrecision);
+    Stream<T> matchForRoute(List<HashPoint> input, int hashPrecision);
 
     /**
      * Lookup for intersections with specific user.
@@ -47,5 +47,5 @@ public interface DataMiner {
      * @return resulting summary with full intersection along the route. Sorting
      * is not guaranteed
      */
-    Stream<HashPoint> matchForUser(long userId, int hashPrecision);
+    Stream<T> matchForUser(long userId, int hashPrecision);
 }
