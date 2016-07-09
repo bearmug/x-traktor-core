@@ -45,10 +45,10 @@ public class TrackerSequentialBenchmark {
     private static final double RANDOM_SHIFT_BASE = .005;
 
     @Shared
-    private CrossTracker redisTracker;
+    private CrossTracker<HashPoint> redisTracker;
 
     @Shared
-    private CrossTracker localTracker;
+    private CrossTracker<HashPoint> localTracker;
 
     @Shared
     private RedisServer redisServer;

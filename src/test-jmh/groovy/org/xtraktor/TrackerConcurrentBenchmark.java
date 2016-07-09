@@ -1,9 +1,13 @@
 package org.xtraktor;
 
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.xtraktor.location.LocationConfig;
 import org.xtraktor.storage.SimpleDataStorage;
 import org.xtraktor.storage.redis.RedisDataStorage;
+import org.xtraktor.storage.redis.RedisJsonStorage;
 import org.xtraktor.storage.redis.StorageUtility;
 import redis.embedded.RedisServer;
 import spock.lang.Shared;
@@ -20,11 +24,13 @@ import java.util.stream.Stream;
 /**
  * 4-threads concurrent run mode at heavy selections. Each output has about 50K elements.
  * <p>
- * Benchmark                                   (latitude)  (longitude)  (timeDelta)  (timestamp)  Mode  Cnt          Score   Error  Units
- * TrackerSequentialBenchmark.localUserList     48.339571    54.145679       100000         1000  avgt    2    4419394.454          ns/op
- * TrackerSequentialBenchmark.localUserStream   48.339571    54.145679       100000         1000  avgt    2        538.232          ns/op
- * TrackerSequentialBenchmark.redisUserList     48.339571    54.145679       100000         1000  avgt    2  212672826.318          ns/op
- * TrackerSequentialBenchmark.redisUserStream   48.339571    54.145679       100000         1000  avgt    2    3030258.775          ns/op
+ * Benchmark                                       (latitude)  (longitude)  (timeDelta)  (timestamp)  Mode  Cnt         Score   Error  Units
+ * TrackerConcurrentBenchmark.localUserList         48.339571    54.145679       100000         1000  avgt    2    767680.898          ns/op
+ * TrackerConcurrentBenchmark.localUserStream       48.339571    54.145679       100000         1000  avgt    2      2643.818          ns/op
+ * TrackerConcurrentBenchmark.redisUserList         48.339571    54.145679       100000         1000  avgt    2  52927749.731          ns/op
+ * TrackerConcurrentBenchmark.redisUserListJson     48.339571    54.145679       100000         1000  avgt    2  49577343.037          ns/op
+ * TrackerConcurrentBenchmark.redisUserStream       48.339571    54.145679       100000         1000  avgt    2   1443626.509          ns/op
+ * TrackerConcurrentBenchmark.redisUserStreamJson   48.339571    54.145679       100000         1000  avgt    2   1471547.779          ns/op
  */
 
 @BenchmarkMode(Mode.AverageTime)
@@ -42,13 +48,19 @@ public class TrackerConcurrentBenchmark {
     private static final double RANDOM_SHIFT_BASE = .005;
 
     @Shared
-    private CrossTracker redisTracker;
+    private CrossTracker<HashPoint> pojoRedisTracker;
 
     @Shared
-    private CrossTracker localTracker;
+    private CrossTracker<String> jsonRedisTracker;
 
     @Shared
-    private RedisServer redisServer;
+    private CrossTracker<HashPoint> localTracker;
+
+    @Shared
+    private RedisServer pojoRedisServer;
+
+    @Shared
+    private RedisServer jsonRedisServer;
 
     @Param({"54.145679"})
     double longitude;
@@ -64,12 +76,17 @@ public class TrackerConcurrentBenchmark {
 
     @Setup
     public void before() throws IOException, URISyntaxException {
-        int port = new StorageUtility().getFreePort();
-        redisServer = new RedisServer(port);
-        redisServer.start();
+        int pojoPort = new StorageUtility().getFreePort();
+        pojoRedisServer = new RedisServer(pojoPort);
+        pojoRedisServer.start();
+
+        int jsonPort = new StorageUtility().getFreePort();
+        jsonRedisServer = new RedisServer(jsonPort);
+        jsonRedisServer.start();
 
         LocationConfig locationConfig = new LocationConfig(1.0, 0, timeDelta / 3);
-        redisTracker = CrossTracker.create(locationConfig, new RedisDataStorage("localhost", port));
+        pojoRedisTracker = CrossTracker.create(locationConfig, new RedisDataStorage("localhost", pojoPort));
+        jsonRedisTracker = CrossTracker.create(locationConfig, new RedisJsonStorage("localhost", jsonPort));
         localTracker = CrossTracker.create(locationConfig, new SimpleDataStorage());
 
         generateData();
@@ -91,24 +108,36 @@ public class TrackerConcurrentBenchmark {
                                 return new RawPoint(lon, lat, tim, userId);
                             })
                             .collect(Collectors.toList());
-                    redisTracker.normalize(userPoints, HASH_PRECISION);
+                    jsonRedisTracker.normalize(userPoints, HASH_PRECISION);
+                    pojoRedisTracker.normalize(userPoints, HASH_PRECISION);
                     localTracker.normalize(userPoints, HASH_PRECISION);
                 });
     }
 
     @TearDown
     public void after() throws InterruptedException {
-        redisServer.stop();
+        pojoRedisServer.stop();
+        jsonRedisServer.stop();
     }
 
     @Benchmark
     public Stream<HashPoint> redisUserStream() {
-        return redisTracker.matchForUser(USER_ID, HASH_PRECISION);
+        return pojoRedisTracker.matchForUser(USER_ID, HASH_PRECISION);
     }
 
     @Benchmark
     public List<HashPoint> redisUserList() {
-        return redisTracker.matchForUser(USER_ID, HASH_PRECISION).collect(Collectors.toList());
+        return pojoRedisTracker.matchForUser(USER_ID, HASH_PRECISION).collect(Collectors.toList());
+    }
+
+    @Benchmark
+    public Stream<String> redisUserStreamJson() {
+        return jsonRedisTracker.matchForUser(USER_ID, HASH_PRECISION);
+    }
+
+    @Benchmark
+    public List<String> redisUserListJson() {
+        return jsonRedisTracker.matchForUser(USER_ID, HASH_PRECISION).collect(Collectors.toList());
     }
 
     @Benchmark
@@ -119,5 +148,11 @@ public class TrackerConcurrentBenchmark {
     @Benchmark
     public List<HashPoint> localUserList() {
         return localTracker.matchForUser(USER_ID, HASH_PRECISION).collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) throws RunnerException {
+        org.openjdk.jmh.runner.options.Options res = new OptionsBuilder()
+                .include(TrackerConcurrentBenchmark.class.getName() + ".*").build();
+        new Runner(res).run();
     }
 }

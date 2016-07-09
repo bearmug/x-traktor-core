@@ -84,5 +84,5 @@ task benchTrackerSequential(type: JavaExec, group: 'jmh',
 task benchTrackerConcurrent(type: JavaExec, group: 'jmh',
         description: 'bench performance tracker instance running with qggressive contention levels') {
     classpath = sourceSets.jmh.runtimeClasspath
-    main = 'org.xtraktor.TrackerSequentialBenchmark'
+    main = 'org.xtraktor.TrackerConcurrentBenchmark'
 }

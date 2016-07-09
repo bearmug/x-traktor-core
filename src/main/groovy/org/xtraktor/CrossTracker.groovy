@@ -7,7 +7,7 @@ import org.xtraktor.preprocessing.SimpleDataPreprocessor
 /**
  * Use this class as an entry point for library simplified use-cases
  */
-class CrossTracker implements DataMiner, DataPreprocessor {
+class CrossTracker<T> implements DataMiner<T>, DataPreprocessor {
 
     /**
      * {@link DataPreprocessor} interface implemented with delegation
@@ -19,9 +19,9 @@ class CrossTracker implements DataMiner, DataPreprocessor {
      * {@link DataMiner} interface implemented with delegation
      */
     @Delegate
-    private final DataMiner miner;
+    private final DataMiner<T> miner;
 
-    private CrossTracker(LocationConfig config, DataStorage dataStorage) {
+    private CrossTracker(LocationConfig config, DataStorage<T> dataStorage) {
         this.preprocessor = new SimpleDataPreprocessor(config, dataStorage);
         this.miner = new SimpleDataMiner(dataStorage);
     }
@@ -33,7 +33,7 @@ class CrossTracker implements DataMiner, DataPreprocessor {
      * @param storage storage implementation to use
      * @return instance ready to work
      */
-    public static CrossTracker create(LocationConfig config, DataStorage storage) {
-        return new CrossTracker(config, storage);
+    public static <T> CrossTracker<T> create(LocationConfig config, DataStorage<T> storage) {
+        return new CrossTracker<T>(config, storage);
     }
 }
