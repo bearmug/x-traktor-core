@@ -1,6 +1,8 @@
 package org.xtraktor.storage
 
 import org.xtraktor.HashPoint
+import org.xtraktor.storage.redis.RedisDataStorage
+import org.xtraktor.storage.redis.StorageUtility
 import redis.embedded.RedisServer
 import spock.lang.Shared
 import spock.lang.Specification

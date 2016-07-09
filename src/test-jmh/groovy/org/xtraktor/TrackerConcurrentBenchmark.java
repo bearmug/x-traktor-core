@@ -2,9 +2,9 @@ package org.xtraktor;
 
 import org.openjdk.jmh.annotations.*;
 import org.xtraktor.location.LocationConfig;
-import org.xtraktor.storage.RedisDataStorage;
 import org.xtraktor.storage.SimpleDataStorage;
-import org.xtraktor.storage.StorageUtility;
+import org.xtraktor.storage.redis.RedisDataStorage;
+import org.xtraktor.storage.redis.StorageUtility;
 import redis.embedded.RedisServer;
 import spock.lang.Shared;
 

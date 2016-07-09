@@ -23,7 +23,7 @@ public interface DataStorage<T> {
      * @param hashPrecision geohash precision to use for persistance
      * @return always true
      */
-    boolean save(Stream<T> points, int hashPrecision);
+    boolean save(Stream<HashPoint> points, int hashPrecision);
 
     /**
      * Lookup and return {@link HashPoint} stream for given input {@link HashPoint}
