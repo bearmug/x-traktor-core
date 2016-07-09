@@ -9,7 +9,7 @@ import java.util.stream.Stream;
  * Precision argument for storing and lookup has to be the same at the
  * moment.
  */
-public interface DataStorage {
+public interface DataStorage<T> {
 
     /**
      * Geohash maximum length which is make sense and availableinto the system
@@ -23,7 +23,7 @@ public interface DataStorage {
      * @param hashPrecision geohash precision to use for persistance
      * @return always true
      */
-    boolean save(Stream<HashPoint> points, int hashPrecision);
+    boolean save(Stream<T> points, int hashPrecision);
 
     /**
      * Lookup and return {@link HashPoint} stream for given input {@link HashPoint}
@@ -39,7 +39,7 @@ public interface DataStorage {
      * @return stream, containing points with same timestamp and geohash with
      * given precision
      */
-    Stream<HashPoint> findByHashAndTime(HashPoint input, int hashPrecision);
+    Stream<T> findByHashAndTime(HashPoint input, int hashPrecision);
 
     /**
      * Totally cleanup storage
@@ -52,5 +52,5 @@ public interface DataStorage {
      * @param userId user id to lookup route for
      * @return user route points, sorted naturally by timestamp
      */
-    Stream<HashPoint> routeForUser(long userId);
+    Stream<T> routeForUser(long userId);
 }

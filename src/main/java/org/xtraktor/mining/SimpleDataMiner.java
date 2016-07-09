@@ -12,9 +12,9 @@ import java.util.stream.Stream;
 public class SimpleDataMiner implements DataMiner {
 
     private final Logger log = LoggerFactory.getLogger(SimpleDataMiner.class);
-    private final DataStorage storage;
+    private final DataStorage<HashPoint> storage;
 
-    public SimpleDataMiner(DataStorage storage) {
+    public SimpleDataMiner(DataStorage<HashPoint> storage) {
         this.storage = storage;
     }
 

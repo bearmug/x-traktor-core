@@ -10,10 +10,9 @@ import org.xtraktor.HashPoint;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-public class SimpleDataStorage implements DataStorage {
+public class SimpleDataStorage implements DataStorage<HashPoint> {
 
     private final Logger log = LoggerFactory.getLogger(SimpleDataStorage.class);
 

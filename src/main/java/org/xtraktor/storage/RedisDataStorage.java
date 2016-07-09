@@ -7,7 +7,7 @@ import redis.clients.jedis.JedisPool;
 
 import java.util.stream.Stream;
 
-public class RedisDataStorage implements DataStorage {
+public class RedisDataStorage implements DataStorage<HashPoint> {
 
     private final StorageUtility utility = new StorageUtility();
     private final JedisPool pool;
