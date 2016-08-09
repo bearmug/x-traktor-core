@@ -93,3 +93,7 @@ Main KPIs to discover here:
  * Single node saturation metrics
  * Max throughput for single node
  * Ability to stand still against high-load input requests flow
+
+## Integrations
+### Travis CI
+Basic integration with [Travis CI](https://travis-ci.org/bearmug/x-traktor-core) implemented at master branch
