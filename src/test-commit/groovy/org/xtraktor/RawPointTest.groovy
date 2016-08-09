@@ -150,7 +150,8 @@ class RawPointTest extends Specification {
         given:
         LocationConfig config = new LocationConfig(
                 timeMin: 0,
-                tolerance: tolerance)
+                tolerance: tolerance,
+                timeDelta: 1)
 
         when:
         RawPoint point = new RawPoint(
@@ -169,6 +170,7 @@ class RawPointTest extends Specification {
         lon  | lat    | pointTime | nextLon | nextLat | nextPointTime | tolerance
         55.2 | 64.345 | 1001      | 55.3    | 64.346  | 1001          | 1.0
         55.2 | 64.345 | 1001      | 55.243  | 64.346  | 999           | 1.0
+        55.2 | 64.345 | 1001      | 55.243  | 64.346  | 1999          | 1.0
     }
 
     def "validation failed nextPoint lon/lat out of tolerance limits"() {
@@ -176,7 +178,8 @@ class RawPointTest extends Specification {
         given:
         LocationConfig config = new LocationConfig(
                 timeMin: 0,
-                tolerance: tolerance)
+                tolerance: tolerance,
+                timeDelta: 1)
 
         when:
         RawPoint point = new RawPoint(
@@ -200,7 +203,8 @@ class RawPointTest extends Specification {
     def "validation passed for correct RawPoint"() {
         LocationConfig config = new LocationConfig(
                 timeMin: 0,
-                tolerance: tolerance)
+                tolerance: tolerance,
+                timeDelta: 1)
 
         when:
         RawPoint point = new RawPoint(

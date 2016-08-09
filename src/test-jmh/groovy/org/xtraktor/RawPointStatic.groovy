@@ -57,11 +57,11 @@ class RawPointStatic {
 
                     double pointLon = new BigDecimal(
                             longitude + (nextPoint.longitude - longitude) * pointRatio)
-                            .setScale(LocationConfig.getPRECISION(), BigDecimal.ROUND_HALF_EVEN)
+                            .setScale(LocationConfig.PRECISION, BigDecimal.ROUND_HALF_EVEN)
                             .doubleValue();
                     double pointLat = new BigDecimal(
                             latitude + (nextPoint.latitude - latitude) * pointRatio)
-                            .setScale(LocationConfig.getPRECISION(), BigDecimal.ROUND_HALF_EVEN)
+                            .setScale(LocationConfig.PRECISION, BigDecimal.ROUND_HALF_EVEN)
                             .doubleValue();
 
                     new HashPoint(

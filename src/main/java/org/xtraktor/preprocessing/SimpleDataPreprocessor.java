@@ -1,10 +1,12 @@
 package org.xtraktor.preprocessing;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtraktor.DataPreprocessor;
+import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
 import org.xtraktor.RawPoint;
 import org.xtraktor.location.LocationConfig;
-import org.xtraktor.DataStorage;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor {
+
+    private final Logger log = LoggerFactory.getLogger(SimpleDataPreprocessor.class);
 
     private final LocationConfig config;
     private final DataStorage storage;
@@ -26,15 +30,17 @@ public class SimpleDataPreprocessor implements DataPreprocessor, PointsProcessor
     }
 
     @Override
-    public Stream<HashPoint> normalize(List<RawPoint> input) {
+    public Stream<HashPoint> normalize(List<RawPoint> input, int hashPrecision) {
 
+        log.trace("Filtering and sorting input size: {}", input.size());
         Stream<HashPoint> res = pair(sort(input))
                 .parallelStream()
                 .filter(point -> point.isValid(config))
                 .flatMap(point -> point.interpolate(config));
+        log.debug("Filter and sort done for input size: {}", input.size());
 
         if (storage != null) {
-            storage.save(res);
+            storage.save(res, hashPrecision);
         }
 
         return res;

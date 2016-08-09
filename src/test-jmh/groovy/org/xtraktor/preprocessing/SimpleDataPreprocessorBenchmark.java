@@ -36,6 +36,7 @@ import java.util.stream.Stream;
 @State(Scope.Benchmark)
 public class SimpleDataPreprocessorBenchmark {
 
+    private static final int HASH_PRECISION = 8;
     @Param({"54.145679"})
     double longitude;
 
@@ -74,7 +75,7 @@ public class SimpleDataPreprocessorBenchmark {
         reversedPoints = Lists.reverse(points);
 
         preprocessor = new SimpleDataPreprocessor(
-                new LocationConfig(1.0, 8, 0, 1000));
+                new LocationConfig(1.0, 0, 1000));
     }
 
     public static void main(String[] args) throws RunnerException {
@@ -85,12 +86,12 @@ public class SimpleDataPreprocessorBenchmark {
 
     @Benchmark
     public Stream<HashPoint> benchmarkInterpolateOrdered() {
-        return preprocessor.normalize(points);
+        return preprocessor.normalize(points, HASH_PRECISION);
     }
 
     @Benchmark
     public Stream<HashPoint> benchmarkInterpolateReversed() {
-        return preprocessor.normalize(reversedPoints);
+        return preprocessor.normalize(reversedPoints, HASH_PRECISION);
     }
 
     @Benchmark

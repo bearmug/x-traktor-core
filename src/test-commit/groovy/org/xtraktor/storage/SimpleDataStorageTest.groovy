@@ -18,7 +18,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         HashPoint stored = storage.findByHashAndTime(input, precision).findAny().get()
 
         then:
@@ -39,7 +39,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision + 1)
         Optional<HashPoint> stored = storage.findByHashAndTime(input, precision).findAny()
 
         then:
@@ -54,13 +54,12 @@ class SimpleDataStorageTest extends Specification {
     }
 
     @Unroll
-    def "point lookup for changing precision == #precision"() {
+    def "point lookup for given precision == #precision"() {
         given:
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.precision = precision
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         HashPoint stored = storage.findByHashAndTime(input, precision).findAny().get()
 
         then:
@@ -84,11 +83,10 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.precision = precision
         storage.save([
                 new HashPoint(geoHashFull: hash1, timestamp: TIME, userId: USER_ID),
                 new HashPoint(geoHashFull: hash2, timestamp: TIME, userId: USER_ID)]
-                .stream())
+                .stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -111,7 +109,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), 8)
         List<HashPoint> stored = storage.findByHashAndTime(input, 8).collect(Collectors.toList())
 
         then:
@@ -147,7 +145,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -164,7 +162,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point].stream())
+        storage.save([point].stream(), precision)
 
         then:
         thrown IllegalStateException
@@ -179,7 +177,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point, input].stream())
+        storage.save([point, input].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -196,7 +194,7 @@ class SimpleDataStorageTest extends Specification {
         DataStorage storage = new SimpleDataStorage();
 
         when:
-        storage.save([point, input].stream())
+        storage.save([point, input].stream(), precision)
         List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
 
         then:
@@ -205,5 +203,67 @@ class SimpleDataStorageTest extends Specification {
         where:
         point                                            | input                                            | precision
         new HashPoint('1234567891', 1, 1, TIME, USER_ID) | new HashPoint('1234567890', 0, 0, TIME, USER_ID) | 8
+    }
+
+    def "clear() removes everything from storage"() {
+        given:
+        DataStorage storage = new SimpleDataStorage();
+
+        when:
+        storage.save([point].stream(), precision)
+        List<HashPoint> stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
+
+        then:
+        stored.size() == 1
+        stored[0] == point
+
+        when:
+        storage.clear()
+        stored = storage.findByHashAndTime(input, precision).collect(Collectors.toList())
+
+        then:
+        stored.isEmpty()
+
+        where:
+        point                                            | input                                                | precision
+        new HashPoint('1234567890', 0, 0, TIME, USER_ID) | new HashPoint('1234567890', 0, 0, TIME, USER_ID - 1) | 8
+    }
+
+    def "route for user found"() {
+        given:
+        DataStorage storage = new SimpleDataStorage();
+
+        when:
+        storage.save([
+                new HashPoint(geoHashFull: '12345678', timestamp: TIME, userId: USER_ID),
+                new HashPoint(geoHashFull: '654321', timestamp: TIME + 1, userId: USER_ID + 1)]
+                .stream(), 8)
+        List<HashPoint> stored = storage.routeForUser(USER_ID).collect(Collectors.toList())
+
+        then:
+        stored.size() == 1
+        stored.each {
+            assert it.timestamp == TIME
+            assert it.userId == USER_ID
+        }
+    }
+
+    def "route for user sorted"() {
+        given:
+        DataStorage storage = new SimpleDataStorage();
+
+        when:
+        storage.save([
+                new HashPoint(geoHashFull: '12345678', timestamp: TIME + 1, userId: USER_ID),
+                new HashPoint(geoHashFull: '12345678', timestamp: TIME, userId: USER_ID),
+                new HashPoint(geoHashFull: '654321', timestamp: TIME + 5, userId: USER_ID),
+                new HashPoint(geoHashFull: '12345678', timestamp: TIME - 1, userId: USER_ID),
+                new HashPoint(geoHashFull: '654321', timestamp: TIME + 1, userId: USER_ID + 1)]
+                .stream(), 8)
+        List<HashPoint> stored = storage.routeForUser(USER_ID).collect(Collectors.toList())
+
+        then:
+        stored.size() == 4
+        stored == stored.toSorted { a, b -> a.timestamp <=> b.timestamp }
     }
 }
