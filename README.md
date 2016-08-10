@@ -1,6 +1,6 @@
 # x-traktor-core
 
-[![Build Status](https://travis-ci.org/bearmug/x-traktor-core.svg?branch=master)](https://travis-ci.org/bearmug/x-traktor-core) [![codecov](https://codecov.io/gh/bearmug/x-traktor-core/branch/master/graph/badge.svg)](https://codecov.io/gh/bearmug/x-traktor-core)
+[![Build Status](https://travis-ci.org/bearmug/x-traktor-core.svg?branch=master)](https://travis-ci.org/bearmug/x-traktor-core) [![codecov](https://codecov.io/gh/bearmug/x-traktor-core/branch/master/graph/badge.svg)](https://codecov.io/gh/bearmug/x-traktor-core) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d86f8b65caf4cf88a2a84893f534e94)](https://www.codacy.com/app/pavel-fadeev/x-traktor-core?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=bearmug/x-traktor-core&amp;utm_campaign=Badge_Grade)
 
 
 Compact solution to track users routes and find intersections and route 
@@ -99,6 +99,15 @@ Main KPIs to discover here:
  * Ability to stand still against high-load input requests flow
 
 ## Integrations
-### Travis CI
- * Basic integration with [Travis CI](https://travis-ci.org/bearmug/x-traktor-core) implemented at master branch
- * Code tests coverage continuous measurement implemented with [Codecov](https://codecov.io/gh/bearmug/x-traktor-core)
+Integrations below are 100% free to use for opensource projects and/or
+public github repos.
+
+### Continuous Integration
+Basic integration with [Travis CI](https://travis-ci.org/bearmug/x-traktor-core) implemented at master branch
+ 
+### Tests coverage
+Code tests coverage continuous measurement implemented with [Codecov](https://codecov.io/gh/bearmug/x-traktor-core)
+Implementation uses [JaCoCo](http://www.eclemma.org/jacoco/) output from relevant [Gradle plugin](https://docs.gradle.org/current/userguide/jacoco_plugin.html)
+
+### Code smells and quality review
+Code quality monitored with [Codacy](https://www.codacy.com/app/pavel-fadeev/x-traktor-core/dashboard#)
