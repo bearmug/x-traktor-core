@@ -1,4 +1,7 @@
 # x-traktor-core
+
+[![Build Status](https://travis-ci.org/bearmug/x-traktor-core.svg?branch=master)](https://travis-ci.org/bearmug/x-traktor-core)
+
 Compact solution to track users routes and find intersections and route 
 correlations with other users. Main idea is quite simple and composed of 
 two aspects:
