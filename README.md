@@ -1,6 +1,7 @@
 # x-traktor-core
 
-[![Build Status](https://travis-ci.org/bearmug/x-traktor-core.svg?branch=master)](https://travis-ci.org/bearmug/x-traktor-core)
+[![Build Status](https://travis-ci.org/bearmug/x-traktor-core.svg?branch=master)](https://travis-ci.org/bearmug/x-traktor-core) [![codecov](https://codecov.io/gh/bearmug/x-traktor-core/branch/master/graph/badge.svg)](https://codecov.io/gh/bearmug/x-traktor-core)
+
 
 Compact solution to track users routes and find intersections and route 
 correlations with other users. Main idea is quite simple and composed of 
@@ -100,3 +101,4 @@ Main KPIs to discover here:
 ## Integrations
 ### Travis CI
 Basic integration with [Travis CI](https://travis-ci.org/bearmug/x-traktor-core) implemented at master branch
+Code tests coverage continuous measurement implemented with [Codecov](https://codecov.io/gh/bearmug/x-traktor-core)
