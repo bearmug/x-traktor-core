@@ -100,5 +100,5 @@ Main KPIs to discover here:
 
 ## Integrations
 ### Travis CI
-Basic integration with [Travis CI](https://travis-ci.org/bearmug/x-traktor-core) implemented at master branch
-Code tests coverage continuous measurement implemented with [Codecov](https://codecov.io/gh/bearmug/x-traktor-core)
+ * Basic integration with [Travis CI](https://travis-ci.org/bearmug/x-traktor-core) implemented at master branch
+ * Code tests coverage continuous measurement implemented with [Codecov](https://codecov.io/gh/bearmug/x-traktor-core)
