@@ -38,19 +38,19 @@ public class SimpleDataPreprocessorBenchmark {
 
     private static final int HASH_PRECISION = 8;
     @Param({"54.145679"})
-    double longitude;
+    private double longitude;
 
     @Param({"48.339571"})
-    double latitude;
+    private double latitude;
 
     @Param({"1000"})
-    long timestamp;
+    private long timestamp;
 
     @Param({"1000000"})
-    long timeDelta;
+    private long timeDelta;
 
     @Param({"777"})
-    long userId;
+    private long userId;
 
     private static final double SEQUENTIAL_SHIFT_BASE = .01;
     private static final double RANDOM_SHIFT_BASE = .005;

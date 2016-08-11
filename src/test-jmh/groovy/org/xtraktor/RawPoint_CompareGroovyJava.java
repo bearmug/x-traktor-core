@@ -35,16 +35,16 @@ public class RawPoint_CompareGroovyJava {
     double longitude;
 
     @Param({"48.339571"})
-    double latitude;
+    private double latitude;
 
     @Param({"1000"})
-    long timestamp;
+    private long timestamp;
 
     @Param({"200000"})
-    long timeDelta;
+    private long timeDelta;
 
     @Param({"777"})
-    long userId;
+    private long userId;
 
     private LocationConfig config;
 

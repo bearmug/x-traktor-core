@@ -1,15 +1,19 @@
 package org.xtraktor.storage.redis;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.xtraktor.DataStorage;
 import org.xtraktor.HashPoint;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.io.IOException;
 import java.util.stream.Stream;
 
 public abstract class RedisStorage<T> implements DataStorage<T> {
 
-    final StorageUtility utility = new StorageUtility();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private final StorageUtility utility = new StorageUtility();
     private final JedisPool pool;
 
     public RedisStorage(String host, int port) {
@@ -27,9 +31,9 @@ public abstract class RedisStorage<T> implements DataStorage<T> {
 
         try (Jedis jedis = pool.getResource()) {
             points.sequential().forEach(p -> {
-                String json = utility.serialize(p);
-                jedis.sadd(utility.getLocationKey(p, hashPrecision), json);
-                jedis.sadd(utility.getUserKey(p.getUserId()), json);
+                String json = serializePoint(p);
+                jedis.sadd(getLocationKey(p, hashPrecision), json);
+                jedis.sadd(getUserKey(p.getUserId()), json);
             });
         }
         return true;
@@ -38,7 +42,7 @@ public abstract class RedisStorage<T> implements DataStorage<T> {
     @Override
     public Stream<T> findByHashAndTime(HashPoint input, int hashPrecision) {
         try (Jedis jedis = pool.getResource()) {
-            return jedis.smembers(utility.getLocationKey(input, hashPrecision))
+            return jedis.smembers(getLocationKey(input, hashPrecision))
                     .parallelStream()
                     .map(this::deserialize)
                     .filter(p -> this.filter(p, input));
@@ -56,11 +60,35 @@ public abstract class RedisStorage<T> implements DataStorage<T> {
     @Override
     public Stream<T> routeForUser(long userId) {
         try (Jedis jedis = pool.getResource()) {
-            return jedis.smembers(utility.getUserKey(userId))
+            return jedis.smembers(getUserKey(userId))
                     .stream()
                     .map(this::deserialize)
                     .sorted(this::sort);
         }
+    }
+
+    public static String serializePoint(HashPoint p) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(p);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("Can not serialize: " + p, e);
+        }
+    }
+
+    public static HashPoint deserializePoint(String s) {
+        try {
+            return OBJECT_MAPPER.readValue(s, HashPoint.class);
+        } catch (IOException e) {
+            throw new IllegalStateException("Can not parse: " + s, e);
+        }
+    }
+
+    public static String getLocationKey(HashPoint point, int precision) {
+        return point.getHash(precision) + "-" + point.getTimestamp();
+    }
+
+    private static String getUserKey(long userId) {
+        return "user-" + userId;
     }
 }
 

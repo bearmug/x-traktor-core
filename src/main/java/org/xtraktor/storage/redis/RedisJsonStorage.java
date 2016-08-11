@@ -25,6 +25,6 @@ public class RedisJsonStorage extends RedisStorage<String> {
 
     @Override
     public HashPoint toPoint(String input) {
-        return utility.deserialize(input);
+        return deserializePoint(input);
     }
 }

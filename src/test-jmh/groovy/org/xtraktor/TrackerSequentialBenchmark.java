@@ -54,16 +54,16 @@ public class TrackerSequentialBenchmark {
     private RedisServer redisServer;
 
     @Param({"54.145679"})
-    double longitude;
+    private double longitude;
 
     @Param({"48.339571"})
-    double latitude;
+    private double latitude;
 
     @Param({"1000"})
-    long timestamp;
+    private long timestamp;
 
     @Param({"100000"})
-    long timeDelta;
+    private long timeDelta;
 
     @Setup
     public void before() throws IOException, URISyntaxException {

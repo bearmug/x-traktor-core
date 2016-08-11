@@ -10,12 +10,12 @@ public class RedisDataStorage extends RedisStorage<HashPoint> {
 
     @Override
     public HashPoint deserialize(String json) {
-        return utility.deserialize(json);
+        return deserializePoint(json);
     }
 
     @Override
     public boolean filter(HashPoint point, HashPoint input) {
-        return point != input && point.getUserId() != input.getUserId();
+        return !point.equals(input) && point.getUserId() != input.getUserId();
     }
 
     @Override

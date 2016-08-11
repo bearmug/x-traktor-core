@@ -33,14 +33,14 @@ public class RawPoint_CompareDoubleBenchmark {
     private static final double TOLERANCE = 1.0;
 
     @Param({"1.000003"})
-    double param1;
+    private double param1;
 
     @Param({"2.00001"})
-    double param2;
+    private double param2;
 
-    BigDecimal bigDecimalParam1;
+    private BigDecimal bigDecimalParam1;
 
-    BigDecimal bigDecimalParam2;
+    private BigDecimal bigDecimalParam2;
 
     @Setup
     public void before() {
