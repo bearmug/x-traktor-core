@@ -76,11 +76,11 @@ public class TrackerConcurrentBenchmark {
 
     @Setup
     public void before() throws IOException, URISyntaxException {
-        int pojoPort = new StorageUtility().getFreePort();
+        int pojoPort = new StorageUtility(0).getFreePort();
         pojoRedisServer = new RedisServer(pojoPort);
         pojoRedisServer.start();
 
-        int jsonPort = new StorageUtility().getFreePort();
+        int jsonPort = new StorageUtility(0).getFreePort();
         jsonRedisServer = new RedisServer(jsonPort);
         jsonRedisServer.start();
 

@@ -67,7 +67,7 @@ public class TrackerSequentialBenchmark {
 
     @Setup
     public void before() throws IOException, URISyntaxException {
-        int port = new StorageUtility().getFreePort();
+        int port = new StorageUtility(0).getFreePort();
         redisServer = new RedisServer(port);
         redisServer.start();
 

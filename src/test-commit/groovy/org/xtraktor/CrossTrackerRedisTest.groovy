@@ -25,7 +25,7 @@ class CrossTrackerRedisTest extends Specification {
     RedisServer redisServer
 
     def setupSpec() {
-        int port = new StorageUtility().freePort
+        int port = new StorageUtility(0).freePort
         redisServer = new RedisServer(port)
         redisServer.start()
 

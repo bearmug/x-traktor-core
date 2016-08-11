@@ -1,5 +1,6 @@
 package org.xtraktor.storage
 
+import com.fasterxml.jackson.core.JsonProcessingException
 import groovy.json.JsonSlurper
 import org.xtraktor.HashPoint
 import org.xtraktor.storage.redis.RedisDataStorage
@@ -17,7 +18,7 @@ class RedisDataStorageTest extends Specification {
     static final long TIME = Long.MAX_VALUE
 
     @Shared
-    StorageUtility utility = new StorageUtility()
+    StorageUtility utility = new StorageUtility(0)
 
     @Shared
     volatile RedisServer redisServer

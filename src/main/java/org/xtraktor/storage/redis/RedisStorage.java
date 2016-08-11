@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 public abstract class RedisStorage<T> implements DataStorage<T> {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final JedisPool pool;
 
     public RedisStorage(String host, int port) {
@@ -66,17 +66,17 @@ public abstract class RedisStorage<T> implements DataStorage<T> {
         }
     }
 
-    public static String serializePoint(HashPoint p) {
+    public String serializePoint(HashPoint p) {
         try {
-            return OBJECT_MAPPER.writeValueAsString(p);
+            return objectMapper.writeValueAsString(p);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Can not serialize: " + p, e);
         }
     }
 
-    public static HashPoint deserializePoint(String s) {
+    public HashPoint deserializePoint(String s) {
         try {
-            return OBJECT_MAPPER.readValue(s, HashPoint.class);
+            return objectMapper.readValue(s, HashPoint.class);
         } catch (IOException e) {
             throw new IllegalStateException("Can not parse: " + s, e);
         }

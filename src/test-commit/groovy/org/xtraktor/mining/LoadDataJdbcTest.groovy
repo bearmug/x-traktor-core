@@ -57,7 +57,7 @@ class LoadDataJdbcTest extends Specification {
     }
 
     private void loadRedis() {
-        int port = new StorageUtility().freePort
+        int port = new StorageUtility(0).freePort
         redisServer = new RedisServer(port)
         redisServer.start()
 
