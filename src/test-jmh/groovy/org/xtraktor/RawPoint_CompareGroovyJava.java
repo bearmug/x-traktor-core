@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 public class RawPoint_CompareGroovyJava {
 
     @Param({"54.145679"})
-    double longitude;
+    private double longitude;
 
     @Param({"48.339571"})
     private double latitude;

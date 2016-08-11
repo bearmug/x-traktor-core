@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 public abstract class RedisStorage<T> implements DataStorage<T> {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private final StorageUtility utility = new StorageUtility();
     private final JedisPool pool;
 
     public RedisStorage(String host, int port) {
